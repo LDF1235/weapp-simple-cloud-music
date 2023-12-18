@@ -4,7 +4,7 @@ export const request = (config) => {
   return new Promise((resolve) => {
     taroRequest({
       ...config,
-      url: `http://localhost:3000${config.url}`,
+      url: `http://192.168.2.173:3000${config.url}`,
       success: (res) => {
         resolve(res.data);
       },

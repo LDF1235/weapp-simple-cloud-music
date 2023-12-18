@@ -181,7 +181,7 @@ const Index = () => {
           moreListPath={ROUTE_MORE_LIST}
           moreListParam={{
             cat: activeSubCategory?.value,
-            type: "fetured",
+            type: "featured",
           }}
         />
         <ScrollView
@@ -319,7 +319,7 @@ const Index = () => {
           leftContent={`${activeHighQualityTag?.name || "默认"} - 精品歌单`}
           moreListParam={{
             cat: activeHighQualityTag?.value,
-            type: "highquality",
+            type: "highQuality",
           }}
           moreListPath={ROUTE_MORE_LIST}
         />

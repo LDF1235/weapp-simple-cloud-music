@@ -3,7 +3,6 @@ import { useMemo, useState } from "react";
 import { Button, Input, ScrollView, Text, View } from "@tarojs/components";
 import SingerCard from "@/components/SingerCard";
 import SongCard from "@/components/SongCard";
-import { searchResultTabs } from "@/constants";
 import { getKeywordItem, setKeywordItem } from "@/storage/storageKeyword";
 import { reqSearch, reqSongDetail } from "@/services";
 import { getSongDetail } from "@/utils/getSongDetail";
@@ -20,6 +19,29 @@ const enumSearchTypes = {
 const initLocalKeywords = () => {
   return getKeywordItem().data;
 };
+
+const searchResultTabs = [
+  {
+    label: "综合",
+    value: "all",
+    index: 0,
+  },
+  {
+    label: "单曲",
+    value: "song",
+    index: 1,
+  },
+  {
+    label: "歌手",
+    value: "singer",
+    index: 2,
+  },
+  {
+    label: "歌单",
+    value: "playlist",
+    index: 3,
+  },
+];
 
 const Search = () => {
   const [isInputFocus, setIsInputFocus] = useState(false);
@@ -189,7 +211,7 @@ const Search = () => {
   };
 
   return (
-    <View className="h-full bg-bgPrimary mc-page overflow-auto">
+    <View className="h-full bg-bgPrimary mc-page">
       <ScrollView enableFlex scrollY className="h-full">
         <View
           className={clsx("px-10", activeTab.value === "all" ? "" : "mb-10")}

@@ -2,7 +2,7 @@ import React from "react";
 import { Text, View } from "@tarojs/components";
 import Taro, { pxTransform } from "@tarojs/taro";
 import LoadImg from "./LoadImg";
-import { ROUTE_PLAYLIST_INFO } from "@/constants";
+import { ROUTE_PLAYLIST } from "@/constants";
 import clsx from "clsx";
 import { countFormatter } from "@/utils/countFormatter";
 
@@ -21,7 +21,7 @@ const PlaylistCard = (props) => {
 
   const playlistCardOnClick = () => {
     Taro.navigateTo({
-      url: `${ROUTE_PLAYLIST_INFO}?id=${id}`,
+      url: `${ROUTE_PLAYLIST}?id=${id}`,
     });
   };
 

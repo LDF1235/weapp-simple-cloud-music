@@ -75,3 +75,63 @@ export const reqSongDetail = (data) => {
     method: "GET",
   });
 };
+
+// 更多歌单
+export const reqMorePlaylist = (data) => {
+  return request({
+    url: "/top/playlist",
+    data,
+    method: "GET",
+  });
+};
+
+// 更多精品歌单
+export const reqMoreHighQualityPlaylist = (data) => {
+  return request({
+    url: "/top/playlist/highquality",
+    data,
+    method: "GET",
+  });
+};
+
+// 更多歌手
+export const reqMoreSingerList = (param) => {
+  return request({
+    url: "/top/artists",
+    method: "GET",
+    data: param,
+  });
+};
+
+// 歌单详情
+export const reqPlaylistSongs = (data) => {
+  return request({
+    url: "/playlist/detail",
+    data,
+    method: "GET",
+  });
+};
+
+// 歌手详情
+export const reqSingerInfo = (params) => {
+  return request({
+    url: "/artist/detail",
+    data: params,
+  });
+};
+
+// 歌手热门歌曲50首
+export const reqSingerHotSongs = (params) => {
+  return request({
+    url: "/artist/top/song",
+    data: params,
+  });
+};
+
+// 歌手更多歌曲
+export const reqMoreSingerSongs = (params) => {
+  return request({
+    url: "/artist/songs",
+    data: params,
+  });
+};

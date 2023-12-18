@@ -29,24 +29,20 @@ const SongCard = (props) => {
         src={picUrl}
         className="!w-[92px] !h-[92px] grow-0 shrink-0 rounded-lg mr-3"
       />
-      <View className="flex flex-1 flex-col">
-        <View className="w-full overflow-hidden">
-          <View
-            className={clsx(
-              "text-[36px] w-full text-textPrimary leading-none whitespace-nowrap overflow-hidden text-ellipsis"
-            )}
-          >
-            {name}
-          </View>
+      <View className="flex-1 h-full overflow-hidden flex flex-col justify-center">
+        <View
+          className={clsx(
+            "text-[36px] w-full text-textPrimary whitespace-nowrap overflow-hidden text-ellipsis"
+          )}
+        >
+          {name}
         </View>
-        <View className="w-full overflow-hidden">
-          <View
-            className={clsx(
-              "text-[28px] mt-3 text-[rgb(185,185,185)] leading-none flex-1 whitespace-nowrap overflow-hidden text-ellipsis"
-            )}
-          >
-            {singersAndEpname}
-          </View>
+        <View
+          className={clsx(
+            "text-[28px] mt-3 w-full text-[rgb(185,185,185)] whitespace-nowrap overflow-hidden text-ellipsis"
+          )}
+        >
+          {singersAndEpname}
         </View>
       </View>
     </View>

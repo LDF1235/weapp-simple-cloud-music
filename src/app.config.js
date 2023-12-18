@@ -4,6 +4,11 @@ export default {
     "pages/recommend/index",
     "pages/me/index",
     "pages/search/index",
+    "pages/moreList/index",
+    "pages/moreSinger/index",
+    "pages/playlist/index",
+    "pages/singer/index",
+    "pages/singerSong/index"
   ],
   requiredBackgroundModes: ["audio"],
   window: {

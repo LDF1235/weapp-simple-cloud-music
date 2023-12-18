@@ -3,7 +3,7 @@ import Taro from "@tarojs/taro";
 
 import LoadImg from "./LoadImg";
 import clsx from "clsx";
-import { ROUTE_SINGER_INFO } from "@/constants";
+import { ROUTE_SINGER } from "@/constants";
 import { View } from "@tarojs/components";
 
 const SingerCard = (props) => {
@@ -11,7 +11,7 @@ const SingerCard = (props) => {
 
   const viewSingerInfo = (singerId) => {
     Taro.navigateTo({
-      url: `${ROUTE_SINGER_INFO}?id=${singerId}`,
+      url: `${ROUTE_SINGER}?id=${singerId}`,
     });
   };
 

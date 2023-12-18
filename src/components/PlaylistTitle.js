@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Text } from "@tarojs/components";
 import Taro from "@tarojs/taro";
-import { ROUTE_MORE_LIST } from "@/constants";
 import clsx from "clsx";
 
 const stringify = (target) => {
@@ -17,7 +16,7 @@ const PlaylistTitle = (props) => {
     const { moreListParam, moreListPath } = props;
 
     if (moreListPath && !moreListParam) {
-      Taro.navigateTo({ url: ROUTE_MORE_LIST });
+      Taro.navigateTo({ url: moreListPath });
     } else {
       const param = { ...moreListParam, topBarContent: leftContent };
       const str = stringify(param);
