@@ -3,23 +3,26 @@ import { View } from "@tarojs/components";
 
 import LoadImg from "./LoadImg";
 import clsx from "clsx";
+import { usePlayerStore } from "@/store/player";
+import { playSong } from "@/module/backgroundAudio";
 
 const SongCard = (props) => {
-  const {
-    id,
-    picUrl,
-    name,
-    epname,
-    durationTime,
-    singers,
-    className,
-    titleClassName,
-    subTitleClassName,
-  } = props;
+  const { id, picUrl, name, epname, durationTime, singers, className } = props;
   const singersAndEpname = `${singers || "-"}-${epname}`;
+
+  const { currentSong } = usePlayerStore();
+
+  const songCardOnClick = () => {
+    if (currentSong.id === id) return;
+
+    const songDetail = { id, picUrl, name, epname, singers, durationTime };
+    console.log("songDetail ------------->", songDetail);
+    playSong(songDetail);
+  };
 
   return (
     <View
+      onClick={songCardOnClick}
       className={clsx(
         "flex items-center w-full h-[120px] pl-10 border-b-[1px] border-solid border-[rgba(197,197,197,.3)] box-border",
         className

@@ -4,6 +4,7 @@ import ScrollBottomLoading from "@/components/ScrollBottomLoading";
 import { reqMoreHighQualityPlaylist, reqMorePlaylist } from "@/services";
 import { ScrollView, View } from "@tarojs/components";
 import PlaylistCard from "@/components/PlaylistCard";
+import { safeAreaRect } from "@/module/safeAreaRect";
 
 const MoreList = () => {
   const router = useRouter();
@@ -75,7 +76,10 @@ const MoreList = () => {
   };
 
   return (
-    <View className=" h-full bg-bgPrimary mc-page">
+    <View
+      className=" h-full bg-bgPrimary"
+      style={{ paddingBottom: safeAreaRect.bottom }}
+    >
       <ScrollView
         enableFlex
         scrollY

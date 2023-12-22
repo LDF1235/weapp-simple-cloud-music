@@ -135,3 +135,30 @@ export const reqMoreSingerSongs = (params) => {
     data: params,
   });
 };
+
+// 歌曲url
+export const reqSongUrl = (params) => {
+  return request({
+    url: "/song/url",
+    method: "GET",
+    data: params,
+  });
+};
+
+// 歌词
+export const reqLyric = (param) => {
+  return request({
+    url: "/lyric",
+    method: "GET",
+    data: param,
+  });
+};
+
+// 歌曲热门评论
+export const reqSongHotComments = (param) => {
+  return request({
+    url: "/comment/hot",
+    data: param,
+    method: "GET",
+  });
+};

@@ -5,6 +5,7 @@ import Taro, { pxTransform } from "@tarojs/taro";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ScrollView, View } from "@tarojs/components";
 import clsx from "clsx";
+import { safeAreaRect } from "@/module/safeAreaRect";
 
 const MoreSinger = () => {
   const [singerList, setSingerList] = useState([]);
@@ -41,7 +42,10 @@ const MoreSinger = () => {
   };
 
   return (
-    <View className="h-full bg-bgPrimary mc-page">
+    <View
+      className="h-full bg-bgPrimary"
+      style={{ paddingBottom: safeAreaRect.bottom }}
+    >
       <ScrollView
         enableFlex
         scrollY

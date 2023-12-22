@@ -10,11 +10,6 @@
   .mc-default-button {
     @apply w-full h-[92px] bg-white text-primary leading-[92px] font-bold text-[32px] rounded-xl after:border-transparent;
   }
-
-  .mc-page {
-    padding-bottom: constant(safe-area-inset-bottom);
-    padding-bottom: env(safe-area-inset-bottom);
-  }
 }
 
 page {

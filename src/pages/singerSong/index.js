@@ -1,5 +1,6 @@
 import ScrollBottomLoading from "@/components/ScrollBottomLoading";
 import SongCard from "@/components/SongCard";
+import { safeAreaRect } from "@/module/safeAreaRect";
 import { reqMoreSingerSongs } from "@/services";
 import { getSongDetail } from "@/utils/getSongDetail";
 import { ScrollView, View } from "@tarojs/components";
@@ -69,7 +70,10 @@ const MoreSingerSong = () => {
   };
 
   return (
-    <View className="h-full bg-bgPrimary mc-page flex flex-col">
+    <View
+      className="h-full bg-bgPrimary flex flex-col"
+      style={{ paddingBottom: safeAreaRect.bottom }}
+    >
       <View className="pt-10 px-10 flex grow-0 shrink-0">
         <View
           className={clsx(
@@ -102,7 +106,7 @@ const MoreSingerSong = () => {
           showScrollbar
           enhanced
           onScrollToLower={songScrollToLower}
-          className='h-full'
+          className="h-full"
         >
           {songs.map((item) => (
             <SongCard

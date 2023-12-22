@@ -12,6 +12,10 @@ import { reqPlaylistSongs, reqSongDetail } from "@/services";
 import ScrollBottomLoading from "@/components/ScrollBottomLoading";
 import LoadImg from "@/components/LoadImg";
 import { getSongDetail } from "@/utils/getSongDetail";
+import PlayerPanel from "@/components/PlayerPanel";
+import { safeAreaRect } from "@/module/safeAreaRect";
+import { usePlayerStore } from "@/store/player";
+import clsx from "clsx";
 
 const Playlist = () => {
   const {
@@ -26,6 +30,7 @@ const Playlist = () => {
   const isLastRequestSucceedRef = useRef(false);
   const theRestOfRequestTimesRef = useRef(0);
   const moreSongsRequestTimesRef = useRef(0);
+  const { showPlayer } = usePlayerStore();
 
   const getPlaylistSongs = useCallback(async (id) => {
     showLoading({ title: "加载中..." });
@@ -151,7 +156,10 @@ const Playlist = () => {
   };
 
   return (
-    <View className="h-full bg-bgPrimary mc-page flex-col flex">
+    <View
+      className="h-full bg-bgPrimary flex-col flex"
+      style={{ paddingBottom: safeAreaRect.bottom }}
+    >
       <View
         className="bg-center grow-0 shrink-0"
         style={{
@@ -201,7 +209,12 @@ const Playlist = () => {
         </Button>
       </View>
 
-      <View className="flex-1 overflow-hidden mt-5">
+      <View
+        className={clsx(
+          "flex-1 overflow-hidden mt-5",
+          showPlayer ? "pb-[130px]" : ""
+        )}
+      >
         <ScrollView
           scrollY
           onScrollToLower={playlistScrollToLower}
@@ -210,17 +223,13 @@ const Playlist = () => {
           showScrollbar
         >
           {songs.map((item) => (
-            <SongCard
-              isInPlaylist
-              key={item.id}
-              {...getSongDetail(item)}
-              playlistId={Number(playlistId)}
-              playlistSongIds={allTrackIdsRef.current}
-            />
+            <SongCard isInPlaylist key={item.id} {...getSongDetail(item)} />
           ))}
           {showLoadingCard && <ScrollBottomLoading />}
         </ScrollView>
       </View>
+
+      <PlayerPanel />
     </View>
   );
 };

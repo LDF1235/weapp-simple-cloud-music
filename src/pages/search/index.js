@@ -6,9 +6,10 @@ import SongCard from "@/components/SongCard";
 import { getKeywordItem, setKeywordItem } from "@/storage/storageKeyword";
 import { reqSearch, reqSongDetail } from "@/services";
 import { getSongDetail } from "@/utils/getSongDetail";
-// import BottomPlayPanel from "@/components/BottomPlayPanel";
 import PlaylistCard from "@/components/PlaylistCard";
 import clsx from "clsx";
+import { safeAreaRect } from "@/module/safeAreaRect";
+import PlayerPanel from "@/components/PlayerPanel";
 
 const enumSearchTypes = {
   song: 1,
@@ -211,7 +212,10 @@ const Search = () => {
   };
 
   return (
-    <View className="h-full bg-bgPrimary mc-page">
+    <View
+      className="h-full bg-bgPrimary"
+      style={{ paddingBottom: safeAreaRect.bottom }}
+    >
       <ScrollView enableFlex scrollY className="h-full">
         <View
           className={clsx("px-10", activeTab.value === "all" ? "" : "mb-10")}
@@ -348,8 +352,8 @@ const Search = () => {
             ))}
           </View>
         )}
-        {/* <BottomPlayPanel /> */}
       </ScrollView>
+      <PlayerPanel />
     </View>
   );
 };

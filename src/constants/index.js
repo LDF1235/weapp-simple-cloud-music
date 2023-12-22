@@ -11,3 +11,9 @@ export const ROUTE_SINGER_SONG = "/pages/singerSong/index";
 export const FIRST_PLAYLIST_SONG_LIMIT = 20;
 export const PLAYLIST_SONG_LIMIT = 10;
 export const MORE_SINGER_LIMIT = 30;
+
+export const enumPlayMode = {
+  repeatOne: 0,
+  order: 1,
+  shuffle: 2,
+};

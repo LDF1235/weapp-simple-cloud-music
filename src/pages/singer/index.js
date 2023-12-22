@@ -7,6 +7,7 @@ import { reqSingerHotSongs, reqSingerInfo } from "@/services";
 import LoadImg from "@/components/LoadImg";
 import { getSongDetail } from "@/utils/getSongDetail";
 import { ROUTE_SINGER_SONG } from "@/constants";
+import { safeAreaRect } from "@/module/safeAreaRect";
 
 const { showLoading, hideLoading } = Taro;
 
@@ -49,7 +50,10 @@ const SingerInfo = () => {
   };
 
   return (
-    <View className="h-full bg-bgPrimary mc-page flex flex-col">
+    <View
+      className="h-full bg-bgPrimary flex flex-col"
+      style={{ paddingBottom: safeAreaRect.bottom }}
+    >
       <View className="p-10 flex grow-0 shrink-0">
         <LoadImg
           src={singerInfo.cover ? `${singerInfo.cover}?param=330y330` : ""}
