@@ -16,7 +16,6 @@ const SongCard = (props) => {
     if (currentSong.id === id) return;
 
     const songDetail = { id, picUrl, name, epname, singers, durationTime };
-    console.log("songDetail ------------->", songDetail);
     playSong(songDetail);
   };
 
@@ -32,17 +31,19 @@ const SongCard = (props) => {
         src={picUrl}
         className="!w-[92px] !h-[92px] grow-0 shrink-0 rounded-lg mr-3"
       />
-      <View className="flex-1 h-full overflow-hidden flex flex-col justify-center">
+      <View className="flex-1 h-full overflow-hidden flex flex-col justify-center pr-10">
         <View
           className={clsx(
-            "text-[36px] w-full text-textPrimary whitespace-nowrap overflow-hidden text-ellipsis"
+            "text-[36px] w-full text-textPrimary whitespace-nowrap overflow-hidden text-ellipsis",
+            props.titleClassName
           )}
         >
           {name}
         </View>
         <View
           className={clsx(
-            "text-[28px] mt-3 w-full text-[rgb(185,185,185)] whitespace-nowrap overflow-hidden text-ellipsis"
+            "text-[28px] mt-3 w-full text-[rgb(185,185,185)] whitespace-nowrap overflow-hidden text-ellipsis",
+            props.subTitleClassName
           )}
         >
           {singersAndEpname}

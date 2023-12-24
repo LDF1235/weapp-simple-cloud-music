@@ -2,17 +2,19 @@ import SongPlayer from "@/components/SongPlayer";
 import SongComments from "@/components/SongComments";
 
 const SongPanel = (props) => {
-  const { songPanelOnClose } = props;
+  const { songPanelOnClose, showComments, setShowComments } = props;
 
   return (
     <>
-      <SongPlayer
-        songPanelOnClose={songPanelOnClose}
-        showComments={props.showComments}
-        setShowComments={props.setShowComments}
-        className={props.showComments ? "hidden" : ""}
-      />
-      <SongComments className={props.showComments ? "" : "hidden"} />
+      {!showComments && (
+        <SongPlayer
+          songPanelOnClose={songPanelOnClose}
+          showComments={showComments}
+          setShowComments={setShowComments}
+        />
+      )}
+
+      {showComments && <SongComments />}
     </>
   );
 };

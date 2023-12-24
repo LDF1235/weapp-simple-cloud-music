@@ -16,6 +16,7 @@ import PlayerPanel from "@/components/PlayerPanel";
 import { safeAreaRect } from "@/module/safeAreaRect";
 import { usePlayerStore } from "@/store/player";
 import clsx from "clsx";
+import { playWholePlaylist } from "@/module/backgroundAudio";
 
 const Playlist = () => {
   const {
@@ -136,23 +137,11 @@ const Playlist = () => {
   }, [playlistInfo]);
 
   const playTheList = async () => {
-    const { trackCount } = playlistInfo;
-
-    if (trackCount) {
-      Taro.showToast({
-        title: "已替换当前播放列表",
-        icon: "none",
-      });
-
-      const [firstSong] = songs;
-
-      playTheWholePlaylist({
-        firstBePlayedSongDetail: getSongDetail(firstSong),
-        dispatch,
-        playlistSongIds: allTrackIdsRef.current,
-        playlistId: Number(playlistId),
-      });
-    }
+    Taro.showToast({
+      title: "已替换当前播放列表",
+      icon: "none",
+    });
+    playWholePlaylist(allTrackIdsRef.current,getSongDetail(songs[0]));
   };
 
   return (

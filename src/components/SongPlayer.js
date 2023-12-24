@@ -27,7 +27,6 @@ import {
   switchSong,
 } from "@/module/backgroundAudio";
 import { usePlayerStore } from "@/store/player";
-import { useReady } from "@tarojs/taro";
 
 const enumDisplayAreaType = {
   coverImg: 0,
@@ -35,14 +34,22 @@ const enumDisplayAreaType = {
   playlist: 2,
 };
 
-const playModeImgs = [orderPlayLine, shuffleFill, repeatOneFill];
-const playModeTips = ["顺序播放", "随机播放", "单曲循环"];
+const playModeImgs = [repeatOneFill, orderPlayLine, shuffleFill];
+const playModeTips = ["单曲循环", "顺序播放", "随机播放"];
 
 const VirtualListItem = (param) => {
   const { index, data } = param;
   const song = data[index];
 
-  return <SongCard className="p-0 text-white" key={song.id} {...song} />;
+  return (
+    <SongCard
+      className="p-0"
+      titleClassName="text-white"
+      subTitleClassName="text-white"
+      key={song.id}
+      {...song}
+    />
+  );
 };
 
 const SongPlayer = (props) => {
@@ -193,9 +200,8 @@ const SongPlayer = (props) => {
             itemData={playlistSongs}
             itemCount={playlistSongs.length}
             itemSize={60}
-          >
-            {VirtualListItem}
-          </VirtualList>
+            item={VirtualListItem}
+          />
         );
       }
       case enumDisplayAreaType.coverImg: {
@@ -221,13 +227,12 @@ const SongPlayer = (props) => {
         backgroundImage: `url(${currentSong.picUrl}?param=800y800)`,
       }}
       className={clsx(
-        "h-screen bg-center transition-[left] duration-200 ease-linear",
-        props.className
+        "h-screen bg-center transition-[left] duration-200 ease-linear"
       )}
     >
       <View className="h-full bg-[rgba(0,0,0,.4)] backdrop-blur-[40px]">
         <View
-          className="h-[6vh] flex items-center justify-center"
+          className="h-20 flex items-center justify-center"
           onClick={pullDownBarOnClick}
         >
           <View className="w-[80px] h-3 rounded-md bg-[rgba(255,255,255,.8)]" />

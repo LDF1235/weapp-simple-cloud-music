@@ -113,7 +113,7 @@ export const playSong = async (songDetail) => {
 };
 
 export const switchSong = (action) => {
-  const { playMode, playlistSongIds, currentSong } = usePlayerStore.getState();
+  const { playMode, playlistSongs, currentSong } = usePlayerStore.getState();
 
   if (playMode === enumPlayMode.repeatOne) {
     audioInstance.title = currentSong.name;
@@ -127,21 +127,44 @@ export const switchSong = (action) => {
 
   if (action !== "prev" && action !== "next") return;
 
-  const songCount = playlistSongIds.length;
-  const currentSongIndex = playlistSongIds.indexOf(currentSong.songId);
+  const songCount = playlistSongs.length;
+  const currentSongIndex = playlistSongs.findIndex(
+    (x) => x.id === currentSong.id
+  );
   let targetSongIndex = 0;
 
   if (playMode === enumPlayMode.order) {
     targetSongIndex = currentSongIndex + (action === "next" ? 1 : -1);
     targetSongIndex = targetSongIndex >= songCount ? 0 : targetSongIndex;
     targetSongIndex = targetSongIndex < 0 ? songCount - 1 : targetSongIndex;
-    playSongById(playlistSongIds[targetSongIndex]);
+    playSongById(playlistSongs[targetSongIndex].id);
     return;
   }
 
   if (playMode === enumPlayMode.shuffle) {
     targetSongIndex = Math.floor(Math.random() * songCount);
-    playSongById(playlistSongIds[targetSongIndex]);
+    playSongById(playlistSongs[targetSongIndex].id);
     return;
   }
+};
+
+export const playWholePlaylist = (songIds, firstSongDetail) => {
+  playSong(firstSongDetail);
+  fetchPlaylistSongDetails(songIds);
+};
+
+const fetchPlaylistSongDetails = async (songIds) => {
+  let songDetails = [];
+
+  while (songIds.length) {
+    const res = await reqSongDetail({ ids: songIds.slice(0, 150).join(",") });
+
+    if (res.code === 200) {
+      songDetails.push(...res.songs.map(getSongDetail));
+    }
+
+    songIds = songIds.slice(150);
+  }
+
+  usePlayerStore.setState({ playlistSongs: songDetails });
 };

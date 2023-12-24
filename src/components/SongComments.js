@@ -21,7 +21,7 @@ import { safeAreaRect } from "@/module/safeAreaRect";
 
 const vipPngArr = [vip1, vip2, vip3, vip4, vip5, vip6, vip7];
 
-const SongComments = (props) => {
+const SongComments = () => {
   const { currentSong } = usePlayerStore();
   const [comments, setComments] = useState([]);
   const [showBottomLoading, setShowBottomLoading] = useState(false);
@@ -92,7 +92,7 @@ const SongComments = (props) => {
   return (
     <View
       style={{ paddingBottom: safeAreaRect.bottom }}
-      className={clsx("h-full overflow-hidden", props.className)}
+      className={clsx(" h-screen overflow-hidden")}
     >
       <ScrollView
         enableFlex

@@ -99,7 +99,7 @@ const BottomPlayPanel = () => {
               ? `${(currentSong.currentTime / currentSong.durationTime) * 100}%`
               : 0,
           }}
-          className="absolute left-0 top-0 h-[1px] bg-[linear-gradient(to_right,rgba(231,62,68,.01),rgba(231,62,68,1))]"
+          className="absolute left-0 top-0 h-[2px] bg-[linear-gradient(to_right,rgba(231,62,68,.01),rgba(231,62,68,1))]"
         />
       </View>
       <PageContainer

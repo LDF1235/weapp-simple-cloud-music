@@ -8,6 +8,7 @@ import LoadImg from "@/components/LoadImg";
 import { getSongDetail } from "@/utils/getSongDetail";
 import { ROUTE_SINGER_SONG } from "@/constants";
 import { safeAreaRect } from "@/module/safeAreaRect";
+import { playWholePlaylist } from "@/module/backgroundAudio";
 
 const { showLoading, hideLoading } = Taro;
 
@@ -37,16 +38,10 @@ const SingerInfo = () => {
   }, [router]);
 
   const playAllSong = () => {
-    const [firstSong] = songs;
-    const playlistIds = songs.map((item) => item.id);
-
-    playTheWholePlaylist({
-      firstBePlayedSongDetail: getSongDetail(firstSong),
-      dispatch,
-      playlistSongIds: playlistIds,
-      playlistId: null,
-    });
-    dispatch(fetchCurrentPlaylistSong(playlistIds));
+    playWholePlaylist(
+      songs.map((x) => x.id),
+      getSongDetail(songs[0])
+    );
   };
 
   return (
