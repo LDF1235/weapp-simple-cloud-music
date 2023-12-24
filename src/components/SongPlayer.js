@@ -206,13 +206,15 @@ const SongPlayer = (props) => {
       }
       case enumDisplayAreaType.coverImg: {
         return (
-          <LoadImg
-            className={clsx(
-              isPlaying ? "scale-[1.05]" : "scale-100",
-              "rounded-[20px] transition-transform origin-center duration-300 ease-linear w-[480px] h-[480px]"
-            )}
-            src={currentSong.picUrl}
-          />
+          <View className="w-[70%] aspect-square">
+            <LoadImg
+              className={clsx(
+                isPlaying ? "scale-[1.05]" : "scale-100",
+                "rounded-[20px] transition-transform origin-center duration-300 ease-linear w-full h-full"
+              )}
+              src={currentSong.picUrl}
+            />
+          </View>
         );
       }
       default: {
@@ -230,148 +232,157 @@ const SongPlayer = (props) => {
         "h-screen bg-center transition-[left] duration-200 ease-linear"
       )}
     >
-      <View className="h-full bg-[rgba(0,0,0,.4)] backdrop-blur-[40px]">
+      <View className="h-full  bg-[rgba(0,0,0,.4)] backdrop-blur-[40px]">
         <View
-          className="h-20 flex items-center justify-center"
-          onClick={pullDownBarOnClick}
+          className="h-full flex flex-col overflow-hidden"
+          style={{ paddingBottom: safeAreaRect.bottom }}
         >
-          <View className="w-[80px] h-3 rounded-md bg-[rgba(255,255,255,.8)]" />
-        </View>
+          <View
+            className="h-20 flex items-center justify-center grow-0 shrink-0"
+            onClick={pullDownBarOnClick}
+          >
+            <View className="w-[80px] h-3 rounded-md bg-[rgba(255,255,255,.8)]" />
+          </View>
 
-        <View
-          className="px-10 h-[54vh] flex justify-center items-center"
-          id="displayArea"
-        >
-          {renderDisplayArea()}
-        </View>
+          <View
+            className="px-10 flex-1 flex justify-center items-center"
+            id="displayArea"
+          >
+            {renderDisplayArea()}
+          </View>
 
-        <View className="px-10 text-[40px] font-bold text-white text-ellipsis overflow-hidden whitespace-nowrap">
-          {currentSong?.name}
-        </View>
-        <View className="px-10 mt-3 text-[28px] font-bold text-[rgba(255,255,255,.7)]">
-          {currentSong.id ? `${currentSong.singers}-${currentSong.epname}` : ""}
-        </View>
+          <View className="px-10 grow-0 shrink-0 text-[40px] font-bold text-white text-ellipsis overflow-hidden whitespace-nowrap">
+            {currentSong?.name}
+          </View>
+          <View className="px-10 grow-0 shrink-0 mt-3 text-[28px] font-bold text-[rgba(255,255,255,.7)]">
+            {currentSong.id
+              ? `${currentSong.singers}-${currentSong.epname}`
+              : ""}
+          </View>
 
-        <View className="py-5 px-10">
-          <View className="h-10 flex items-center">
-            <View
-              className="relative w-full h-2 bg-[rgba(255,255,255,.4)] rounded"
-              id="progressWholeBar"
-              onTouchStart={progressBarOnTouchStart}
-            >
-              <View className="absolute w-full left-0 top-1/2 h-full -translate-y-1/2 overflow-hidden rounded">
+          <View className="py-5 px-10 grow-0 shrink-0">
+            <View className="h-10 flex items-center">
+              <View
+                className="relative w-full h-2 bg-[rgba(255,255,255,.4)] rounded"
+                id="progressWholeBar"
+                onTouchStart={progressBarOnTouchStart}
+              >
+                <View className="absolute w-full left-0 top-1/2 h-full -translate-y-1/2 overflow-hidden rounded">
+                  <View
+                    className="absolute w-full z-[99] top-1/2 h-2 bg-white rounded"
+                    style={{
+                      transform: `translateX(calc(-100% + ${
+                        isDragProgressPoint
+                          ? progressPointOffset
+                          : playTimeOffset
+                      }px)) translateY(-50%)`,
+                    }}
+                  />
+                </View>
                 <View
-                  className="absolute w-full z-[99] top-1/2 h-2 bg-white rounded"
+                  className="relative z-[999] top-1/2 w-[29px] h-[29px] rounded-[50%] bg-white"
                   style={{
-                    transform: `translateX(calc(-100% + ${
+                    transform: `translateX(calc(-50% + ${
                       isDragProgressPoint ? progressPointOffset : playTimeOffset
                     }px)) translateY(-50%)`,
                   }}
+                  onTouchStart={(event) => {
+                    event.stopPropagation();
+                  }}
+                  onTouchMove={progressPointOnTouchMove}
+                  onTouchEnd={progressPointOnTouchEnd}
                 />
               </View>
-              <View
-                className="relative z-[999] top-1/2 w-[29px] h-[29px] rounded-[50%] bg-white"
-                style={{
-                  transform: `translateX(calc(-50% + ${
-                    isDragProgressPoint ? progressPointOffset : playTimeOffset
-                  }px)) translateY(-50%)`,
-                }}
-                onTouchStart={(event) => {
-                  event.stopPropagation();
-                }}
-                onTouchMove={progressPointOnTouchMove}
-                onTouchEnd={progressPointOnTouchEnd}
+            </View>
+          </View>
+
+          <View className="px-10 flex justify-between grow-0 shrink-0">
+            <View className="text-[24px] text-[rgba(255,255,255,.6)]">
+              {format(
+                isDragProgressPoint ? dragCurrentTime : currentSong.currentTime,
+                "mm:ss"
+              )}
+            </View>
+            <View className="px-1 text-[24px] text-[rgb(99,99,99)] bg-white rounded">
+              128K
+            </View>
+            <View className="text-[24px] text-[rgba(255,255,255,.6)]">
+              {format(currentSong?.durationTime, "mm:ss")}
+            </View>
+          </View>
+
+          <View className="flex h-[60px] my-5 grow-0 shrink-0">
+            <View
+              className="flex-1 flex justify-center items-center"
+              onClick={toggleShowLyric}
+            >
+              <Image
+                className="w-10 h-10"
+                src={
+                  displayAreaType === enumDisplayAreaType.lyric
+                    ? chatQuoteFill
+                    : chatQuoteLine
+                }
+              />
+            </View>
+            <View
+              className="flex-1 flex justify-center items-center"
+              onClick={toggleShowSongList}
+            >
+              <Image
+                className="w-10 h-10"
+                src={
+                  displayAreaType === enumDisplayAreaType.playlist
+                    ? playListFill
+                    : playListLine
+                }
+              />
+            </View>
+            <View
+              className="flex-1 flex justify-center items-center"
+              onClick={togglePlayMode}
+            >
+              <Image className="w-10 h-10" src={playModeImgs[playMode]} />
+            </View>
+            <View
+              className="flex-1 flex justify-center items-center"
+              onClick={toggleShowComments}
+            >
+              <Image
+                className="w-10 h-10"
+                src={showComments ? messageFill : messageLine}
               />
             </View>
           </View>
-        </View>
 
-        <View className="px-10 flex justify-between">
-          <View className="text-[24px] text-[rgba(255,255,255,.6)]">
-            {format(
-              isDragProgressPoint ? dragCurrentTime : currentSong.currentTime,
-              "mm:ss"
-            )}
-          </View>
-          <View className="px-1 text-[24px] text-[rgb(99,99,99)] bg-white rounded">
-            128K
-          </View>
-          <View className="text-[24px] text-[rgba(255,255,255,.6)]">
-            {format(currentSong?.durationTime, "mm:ss")}
-          </View>
-        </View>
-
-        <View className="flex h-[60px] my-5">
-          <View
-            className="flex-1 flex justify-center items-center"
-            onClick={toggleShowLyric}
-          >
-            <Image
-              className="w-10 h-10"
-              src={
-                displayAreaType === enumDisplayAreaType.lyric
-                  ? chatQuoteFill
-                  : chatQuoteLine
-              }
-            />
-          </View>
-          <View
-            className="flex-1 flex justify-center items-center"
-            onClick={toggleShowSongList}
-          >
-            <Image
-              className="w-10 h-10"
-              src={
-                displayAreaType === enumDisplayAreaType.playlist
-                  ? playListFill
-                  : playListLine
-              }
-            />
-          </View>
-          <View
-            className="flex-1 flex justify-center items-center"
-            onClick={togglePlayMode}
-          >
-            <Image className="w-10 h-10" src={playModeImgs[playMode]} />
-          </View>
-          <View
-            className="flex-1 flex justify-center items-center"
-            onClick={toggleShowComments}
-          >
-            <Image
-              className="w-10 h-10"
-              src={showComments ? messageFill : messageLine}
-            />
-          </View>
-        </View>
-
-        <View className="flex">
-          <View
-            className="flex-1 flex justify-center items-center text-center h-[160px]"
-            onClick={() => {
-              switchSong("prev");
-            }}
-          >
-            <Text className="iconfont icon-skip_previous text-[80px] text-[rgba(255,255,255,.9)]" />
-          </View>
-          <View
-            className="flex-1 flex justify-center items-center text-center h-[160px]"
-            onClick={togglePlayingOnClick}
-          >
-            <Text
-              className={clsx(
-                `iconfont text-[120px] text-[rgba(255,255,255,.9)]`,
-                isPlaying ? "icon-ai07" : "icon-bofang1"
-              )}
-            />
-          </View>
-          <View
-            className="flex-1 flex justify-center items-center text-center h-[160px]"
-            onClick={() => {
-              switchSong("next");
-            }}
-          >
-            <Text className="iconfont icon-skip-next text-[80px] text-[rgba(255,255,255,.9)]" />
+          <View className="flex grow-0 shrink-0">
+            <View
+              className="flex-1 flex justify-center items-center text-center h-[160px]"
+              onClick={() => {
+                switchSong("prev");
+              }}
+            >
+              <Text className="iconfont icon-skip_previous text-[80px] text-[rgba(255,255,255,.9)]" />
+            </View>
+            <View
+              className="flex-1 flex justify-center items-center text-center h-[160px]"
+              onClick={togglePlayingOnClick}
+            >
+              <Text
+                className={clsx(
+                  `iconfont text-[120px] text-[rgba(255,255,255,.9)]`,
+                  isPlaying ? "icon-ai07" : "icon-bofang1"
+                )}
+              />
+            </View>
+            <View
+              className="flex-1 flex justify-center items-center text-center h-[160px]"
+              onClick={() => {
+                switchSong("next");
+              }}
+            >
+              <Text className="iconfont icon-skip-next text-[80px] text-[rgba(255,255,255,.9)]" />
+            </View>
           </View>
         </View>
       </View>
