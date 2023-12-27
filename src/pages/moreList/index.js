@@ -85,19 +85,21 @@ const MoreList = () => {
         scrollY
         enhanced
         onScrollToLower={listScrollToLower}
-        className="w-full px-10 pb-5 flex justify-between flex-wrap box-border h-full"
+        className="h-full"
       >
-        {playlist.map((item) => (
-          <PlaylistCard
-            {...item}
-            key={item.id}
-            className="text-[24px] mb-0 mt-5"
-            width={300}
-            titleClassName="text-[24px] h-[64px] leading-[32px]"
-            copywriter={null}
-          />
-        ))}
-        {showScrollLoading && <ScrollBottomLoading />}
+        <View className="flex px-10 flex-wrap  justify-between">
+          {playlist.map((item) => (
+            <PlaylistCard
+              {...item}
+              key={item.id}
+              className="text-[24px] mb-0 mt-5"
+              width={300}
+              titleClassName="text-[24px] h-[64px] leading-[32px]"
+              copywriter={null}
+            />
+          ))}
+          {showScrollLoading && <ScrollBottomLoading />}
+        </View>
       </ScrollView>
     </View>
   );
