@@ -4,7 +4,6 @@ import { request } from "./request";
 export const reqCategories = () => {
   return request({
     url: "/playlist/catlist",
-    method: "GET",
   });
 };
 
@@ -12,7 +11,6 @@ export const reqCategories = () => {
 export const reqHotSubCategories = () => {
   return request({
     url: "/playlist/hot",
-    method: "GET",
   });
 };
 
@@ -20,7 +18,6 @@ export const reqHotSubCategories = () => {
 export const reqPlaylist = (data) => {
   return request({
     url: "/top/playlist",
-    method: "GET",
     data,
   });
 };
@@ -29,7 +26,6 @@ export const reqPlaylist = (data) => {
 export const reqRankPlayList = () => {
   return request({
     url: "/toplist",
-    method: "GET",
   });
 };
 
@@ -37,7 +33,6 @@ export const reqRankPlayList = () => {
 export const reqHighQualityCategories = () => {
   return request({
     url: "/playlist/highquality/tags",
-    method: "GET",
   });
 };
 
@@ -46,7 +41,6 @@ export const reqHighQualityPlaylist = (data) => {
   return request({
     url: "/top/playlist/highquality",
     data,
-    method: "GET",
   });
 };
 
@@ -55,15 +49,14 @@ export const reqHotSinger = (data) => {
   return request({
     url: "/top/artists",
     data,
-    method: "GET",
   });
 };
 
 // 搜索
-export function reqSearch(params) {
+export function reqSearch(data) {
   return request({
     url: "/search",
-    data: params,
+    data,
   });
 }
 
@@ -72,7 +65,6 @@ export const reqSongDetail = (data) => {
   return request({
     url: "/song/detail",
     data,
-    method: "GET",
   });
 };
 
@@ -81,7 +73,6 @@ export const reqMorePlaylist = (data) => {
   return request({
     url: "/top/playlist",
     data,
-    method: "GET",
   });
 };
 
@@ -90,16 +81,14 @@ export const reqMoreHighQualityPlaylist = (data) => {
   return request({
     url: "/top/playlist/highquality",
     data,
-    method: "GET",
   });
 };
 
 // 更多歌手
-export const reqMoreSingerList = (param) => {
+export const reqMoreSingerList = (data) => {
   return request({
     url: "/top/artists",
-    method: "GET",
-    data: param,
+    data,
   });
 };
 
@@ -108,15 +97,14 @@ export const reqPlaylistSongs = (data) => {
   return request({
     url: "/playlist/detail",
     data,
-    method: "GET",
   });
 };
 
 // 歌手详情
-export const reqSingerInfo = (params) => {
+export const reqSingerInfo = (data) => {
   return request({
     url: "/artist/detail",
-    data: params,
+    data,
   });
 };
 
@@ -129,10 +117,10 @@ export const reqSingerHotSongs = (params) => {
 };
 
 // 歌手更多歌曲
-export const reqMoreSingerSongs = (params) => {
+export const reqMoreSingerSongs = (data) => {
   return request({
     url: "/artist/songs",
-    data: params,
+    data,
   });
 };
 
@@ -140,25 +128,85 @@ export const reqMoreSingerSongs = (params) => {
 export const reqSongUrl = (params) => {
   return request({
     url: "/song/url",
-    method: "GET",
     data: params,
   });
 };
 
 // 歌词
-export const reqLyric = (param) => {
+export const reqLyric = (data) => {
   return request({
     url: "/lyric",
-    method: "GET",
-    data: param,
+    data,
   });
 };
 
 // 歌曲热门评论
-export const reqSongHotComments = (param) => {
+export const reqSongHotComments = (data) => {
   return request({
     url: "/comment/hot",
-    data: param,
-    method: "GET",
+    data,
+  });
+};
+
+// 发送验证码
+export const reqSendAuthCode = (data) => {
+  return request({
+    url: "/captcha/sent",
+    data,
+  });
+};
+
+// 邮箱登录
+export const reqLoginByEmail = (data) => {
+  return request({
+    url: "/login",
+    method: "POST",
+    data,
+  });
+};
+
+// 手机号登录
+export const reqLoginByPhone = (data) => {
+  return request({
+    url: "/login/cellphone",
+    method: "POST",
+    data,
+  });
+};
+
+// 生成登录二维码的key
+export const reqQrCodeKey = () => {
+  return request({
+    url: "/login/qr/key",
+    data: {
+      timestamp: new Date().getTime(),
+    },
+  });
+};
+
+// 生成登录二维码
+export const reqQrCode = (data) => {
+  return request({
+    url: "/login/qr/create",
+    data: {
+      ...data,
+      timestamp: new Date().getTime(),
+    },
+  });
+};
+
+// 查询二维码登录状态
+export const reqCheckQrCode = (data) => {
+  return request({
+    url: "/login/qr/check",
+    data,
+  });
+};
+
+// 退出登录
+export const reqLogout = () => {
+  return request({
+    url: "/logout",
+    method: "POST",
   });
 };

@@ -8,7 +8,8 @@ export default {
     "pages/moreSinger/index",
     "pages/playlist/index",
     "pages/singer/index",
-    "pages/singerSong/index"
+    "pages/singerSong/index",
+    "pages/login/index",
   ],
   requiredBackgroundModes: ["audio"],
   window: {

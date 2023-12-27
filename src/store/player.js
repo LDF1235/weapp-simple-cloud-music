@@ -1,11 +1,11 @@
-import { getLocalPlayMode } from "@/storage/storagePlayerSetting";
+import { getStoragePlayMode } from "@/storage";
 import { create } from "zustand";
 
 const usePlayerStore = create((set) => ({
   showPlayer: false,
   isPlaying: false,
   playlistSongs: [],
-  playMode: getLocalPlayMode(),
+  playMode: getStoragePlayMode(),
   currentSong: {
     id: 0,
     picUrl: "",

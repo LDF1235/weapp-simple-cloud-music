@@ -3,7 +3,11 @@ import { useMemo, useState } from "react";
 import { Button, Input, ScrollView, Text, View } from "@tarojs/components";
 import SingerCard from "@/components/SingerCard";
 import SongCard from "@/components/SongCard";
-import { getKeywordItem, setKeywordItem } from "@/storage/storageKeyword";
+import {
+  getStorageKeyword,
+  removeStorageKeyword,
+  setStorageKeyword,
+} from "@/storage";
 import { reqSearch, reqSongDetail } from "@/services";
 import { getSongDetail } from "@/utils/getSongDetail";
 import PlaylistCard from "@/components/PlaylistCard";
@@ -18,7 +22,7 @@ const enumSearchTypes = {
 };
 
 const initLocalKeywords = () => {
-  return getKeywordItem().data;
+  return getStorageKeyword().data;
 };
 
 const searchResultTabs = [
@@ -197,7 +201,7 @@ const Search = () => {
       if (!isAlreadyExist) {
         setLocalKeywords((x) => {
           const newKeywords = [newKeyword, ...x];
-          setKeywordItem(newKeywords);
+          setStorageKeyword(newKeywords);
           return newKeywords;
         });
       }
@@ -277,7 +281,7 @@ const Search = () => {
               <View
                 className="py-2 px-4 mr-4 mb-4 bg-white text-[24px] rounded-lg"
                 onClick={() => {
-                  setKeywordItem([]);
+                  removeStorageKeyword();
                   setLocalKeywords([]);
                 }}
               >

@@ -13,7 +13,7 @@ import messageLine from "@/assets/svgs/messageLine.svg";
 import Taro from "@tarojs/taro";
 import { format } from "date-fns";
 import VirtualList from "@tarojs/components/virtual-list";
-import { setLocalPlayMode } from "@/storage/storagePlayerSetting";
+import { setStoragePlayMode } from "@/storage";
 import LoadImg from "./LoadImg";
 import SongCard from "./SongCard";
 import LyricSection from "./LyricSection";
@@ -125,7 +125,7 @@ const SongPlayer = (props) => {
     const newPlayMode = playMode + 1 > modeCount - 1 ? 0 : playMode + 1;
     Taro.showToast({ title: playModeTips[newPlayMode], icon: "none" });
     usePlayerStore.setState({ playMode: newPlayMode });
-    setLocalPlayMode(newPlayMode);
+    setStoragePlayMode(newPlayMode);
   };
 
   const progressPointOnTouchMove = (event) => {
