@@ -1,8 +1,8 @@
 export default {
   pages: [
+    "pages/me/index",
     "pages/found/index",
     "pages/recommend/index",
-    "pages/me/index",
     "pages/search/index",
     "pages/moreList/index",
     "pages/moreSinger/index",

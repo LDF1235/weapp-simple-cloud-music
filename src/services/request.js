@@ -1,20 +1,43 @@
 import { getStorageCookies, setStorageCookie } from "@/storage";
 import Taro, { request as taroRequest } from "@tarojs/taro";
 
-export const request = (config) => {
+const findCookie = () => {
   const storageCookies = getStorageCookies();
-  let cookieArr = [];
 
-  if (Array.isArray(storageCookies) && storageCookies.length) {
-    for (const cookie of storageCookies) {
-      cookieArr.push(cookie.split(";").filter(Boolean)[0]);
+  if (!Array.isArray(storageCookies) || !storageCookies.length) return;
+
+  let cookie = "";
+
+  for (const item of storageCookies) {
+    const obj = item
+      .split(";")
+      .filter(Boolean)
+      .reduce((prev, cur) => {
+        const [key, val] = cur.trim().split("=");
+
+        if (key && val) {
+          prev[key] = val;
+        }
+
+        return prev;
+      }, {});
+
+    if (obj["MUSIC_U"]) {
+      cookie = `MUSIC_U=${obj["MUSIC_U"]}`;
+      break;
     }
   }
 
-  if (cookieArr.length) {
-    config.header = {
-      ...config.header,
-      Cookie: cookieArr.join("; "),
+  return cookie;
+};
+
+export const request = (config) => {
+  const cookie = findCookie();
+
+  if (config) {
+    config.data = {
+      ...config.data,
+      cookie,
     };
   }
 
@@ -40,7 +63,7 @@ export const request = (config) => {
                 return prev;
               }, {});
 
-            return obj.Path === "/" && obj.Max - Age;
+            return obj.Path === "/" && obj["Max-Age"];
           });
 
           setStorageCookie(targetCookies);

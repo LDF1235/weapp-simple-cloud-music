@@ -7,6 +7,7 @@ export const ROUTE_MORE_LIST = "/pages/moreList/index";
 export const ROUTE_MORE_SINGER = "/pages/moreSinger/index";
 export const ROUTE_LOGIN = "/pages/login/index";
 export const ROUTE_SINGER_SONG = "/pages/singerSong/index";
+export const ROUTE_ME = "/pages/me/index";
 
 export const FIRST_PLAYLIST_SONG_LIMIT = 20;
 export const PLAYLIST_SONG_LIMIT = 10;

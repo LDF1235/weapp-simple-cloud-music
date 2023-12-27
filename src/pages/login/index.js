@@ -14,6 +14,8 @@ import {
 } from "@/services";
 import md5 from "md5";
 import { setStorageUserInfo } from "@/storage";
+import { userInfoStore } from "@/store/userInfo";
+import { ROUTE_ME } from "@/constants";
 
 const enumLoginWay = {
   phone: 0,
@@ -80,8 +82,7 @@ const Login = () => {
       const res = await reqCheckQrCode({ key });
 
       if (res.code === 800) {
-        Taro.showToast({ icon: null, title: "二维码已过期，请重新扫码" });
-        generateQrCode();
+        setShowQrCodeReset(true);
         return;
       }
 
@@ -219,11 +220,15 @@ const Login = () => {
   };
 
   const afterLoginSuccess = (loginRes) => {
-    setStorageUserInfo({
+    const userInfo = {
       account: loginRes.account,
       profile: loginRes.profile,
       bindings: loginRes.bindings,
-    });
+    };
+
+    setStorageUserInfo(userInfo);
+    userInfoStore.setState({ userInfo });
+    Taro.switchTab({ url: ROUTE_ME });
   };
 
   return (
@@ -246,9 +251,9 @@ const Login = () => {
 
         {loginWay === enumLoginWay.qrCode && (
           <>
-            <View className="w-[400px] h-[400px] mt-10 mx-auto flex items-center justify-center">
+            <View className="w-[400px] h-[400px] mt-10 mb-10 mx-auto flex items-center justify-center">
               {qrCode ? (
-                <Image src={qrCode} />
+                <Image src={qrCode} className="w-full" mode="widthFix" />
               ) : showQrCodeReset ? (
                 <Button
                   className="mc-primary-button"
