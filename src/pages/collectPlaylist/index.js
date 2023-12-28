@@ -5,13 +5,13 @@ import ScrollBottomLoading from "@/components/ScrollBottomLoading";
 import { useState } from "react";
 import { useEffect } from "react";
 import { reqUserPlaylist } from "@/services";
-import { userInfoStore } from "@/store/userInfo";
+import { useUserInfoStore } from "@/store/userInfo";
 import { useRef } from "react";
 
 const Index = () => {
   const [list, setList] = useState([]);
   const [hasMore, setHasMore] = useState(true);
-  const { userInfo } = userInfoStore();
+  const { userInfo } = useUserInfoStore();
 
   const isPrevRequestOkRef = useRef(false);
   const offsetRef = useRef(0);

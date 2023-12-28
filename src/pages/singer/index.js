@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Taro, { useRouter } from "@tarojs/taro";
-import { Button, ScrollView, Text, View } from "@tarojs/components";
+import { Button, Image, ScrollView, Text, View } from "@tarojs/components";
 import PlaylistTitle from "@/components/PlaylistTitle";
 import SongCard from "@/components/SongCard";
 import { reqSingerHotSongs, reqSingerInfo } from "@/services";
@@ -67,9 +67,12 @@ const SingerInfo = () => {
       </View>
 
       <View className="px-10 mt-5 grow-0 shrink-0">
-        <Button className="mc-primary-button" onClick={playAllSong}>
-          <Text className="iconfont icon-bofang text-[32px] mr-2.5"></Text>
-          <Text>播放全部</Text>
+        <Button
+          className="mc-primary-button flex items-center justify-center"
+          onClick={playAllSong}
+        >
+          <Image src={playCircleLineSvg} className="w-8 h-8" />
+          <Text className="ml-2.5">播放全部</Text>
         </Button>
       </View>
 

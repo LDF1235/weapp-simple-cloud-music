@@ -3,9 +3,10 @@ import { create } from "zustand";
 
 const userInfo = getStorageUserInfo();
 
-const userInfoStore = create((set) => ({
-  userInfo:userInfo,
+const useUserInfoStore = create((set) => ({
+  userInfo: userInfo,
+  likeListIds: new Set(),
   setUserInfoState: (callback) => set((state) => callback(state)),
 }));
 
-export { userInfoStore };
+export { useUserInfoStore };

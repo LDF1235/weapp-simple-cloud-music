@@ -9,7 +9,8 @@ const STORAGE_COOKIE = "cookie";
 
 const getStorage = (key, defaultVal) => {
   try {
-    return getStorageSync(key);
+    const val = getStorageSync(key);
+    return val === "" ? defaultVal : val;
   } catch (error) {
     return defaultVal;
   }

@@ -17,6 +17,10 @@ import { safeAreaRect } from "@/module/safeAreaRect";
 import { usePlayerStore } from "@/store/player";
 import clsx from "clsx";
 import { playWholePlaylist } from "@/module/backgroundAudio";
+import { useUserInfoStore } from "@/store/userInfo";
+import playCircleLineSvg from "../../assets/svgs/play-circle-line.svg";
+import chatHeartLinePrimarySvg from "../../assets/svgs/chat-heart-line-primary.svg";
+import chatHeartLineWhiteSvg from "../../assets/svgs/chat-heart-line-white.svg";
 
 const Playlist = () => {
   const {
@@ -32,6 +36,7 @@ const Playlist = () => {
   const theRestOfRequestTimesRef = useRef(0);
   const moreSongsRequestTimesRef = useRef(0);
   const { showPlayer } = usePlayerStore();
+  const { userInfo } = useUserInfoStore();
 
   const getPlaylistSongs = useCallback(async (id) => {
     showLoading({ title: "加载中..." });
@@ -46,6 +51,7 @@ const Playlist = () => {
         trackCount,
         description,
         creator: { nickname, avatarUrl },
+        subscribed,
       } = response.playlist;
 
       setPlaylistInfo({
@@ -54,6 +60,7 @@ const Playlist = () => {
         trackUpdateTime,
         trackCount,
         description,
+        subscribed,
       });
       setCreator({ nickname, avatarUrl });
 
@@ -141,7 +148,7 @@ const Playlist = () => {
       title: "已替换当前播放列表",
       icon: "none",
     });
-    playWholePlaylist(allTrackIdsRef.current,getSongDetail(songs[0]));
+    playWholePlaylist(allTrackIdsRef.current, getSongDetail(songs[0]));
   };
 
   return (
@@ -192,10 +199,48 @@ const Playlist = () => {
         <View className="w-full mt-5 text-[24px] text-[#747474] whitespace-normal text-ellipsis line-clamp-2">
           {playlistInfo.description}
         </View>
-        <Button className="mc-primary-button mt-5" onClick={playTheList}>
-          <Text className="iconfont icon-bofang text-[32px] mr-2.5" />
-          <Text>播放歌单</Text>
-        </Button>
+
+        {userInfo ? (
+          <View className="flex mt-5">
+            <Button
+              className="mc-primary-button  w-auto flex-1 flex items-center justify-center"
+              onClick={playTheList}
+            >
+              <Image src={playCircleLineSvg} className="w-8 h-8" />
+              <Text className="ml-2.5">播放歌单</Text>
+            </Button>
+
+            <Button
+              className={clsx(
+                playlistInfo.subscribed
+                  ? "mc-default-button"
+                  : "mc-primary-button",
+                " ml-10 w-auto flex-1 flex items-center justify-center"
+              )}
+              onClick={playTheList}
+            >
+              <Image
+                src={
+                  playlistInfo.subscribed
+                    ? chatHeartLinePrimarySvg
+                    : chatHeartLineWhiteSvg
+                }
+                className="w-8 h-8"
+              />
+              <Text className="ml-2.5">
+                {playlistInfo.subscribed ? "取消收藏" : "收藏歌单"}
+              </Text>
+            </Button>
+          </View>
+        ) : (
+          <Button
+            className="mc-primary-button mt-5  flex items-center justify-center"
+            onClick={playTheList}
+          >
+            <Image src={playCircleLineSvg} className="w-8 h-8" />
+            <Text className="ml-2.5">播放歌单</Text>
+          </Button>
+        )}
       </View>
 
       <View

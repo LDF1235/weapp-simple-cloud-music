@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Button, ScrollView, View, Text } from "@tarojs/components";
+import { Button, ScrollView, View, Text, Image } from "@tarojs/components";
 import Taro, { showLoading, hideLoading } from "@tarojs/taro";
 import PlaylistCard from "@/components/PlaylistCard";
 import PlaylistTitle from "@/components/PlaylistTitle";
@@ -23,6 +23,7 @@ import {
   ROUTE_SEARCH,
 } from "@/constants";
 import clsx from "clsx";
+import searchLineSvg from "../../assets/svgs/search-line.svg";
 
 const Index = () => {
   const [categories, setCategories] = useState([]);
@@ -173,12 +174,13 @@ const Index = () => {
           </Text>
           <Text className="text-[24px]">歌单广场</Text>
         </View>
-        <Text
-          className=" iconfont icon-Fangdajing text-[60px] "
+        <Image
+          src={searchLineSvg}
+          className="w-[60px] h-[60px]"
           onClick={() => {
             Taro.navigateTo({ url: ROUTE_SEARCH });
           }}
-        ></Text>
+        />
       </View>
       <View>
         <PlaylistTitle

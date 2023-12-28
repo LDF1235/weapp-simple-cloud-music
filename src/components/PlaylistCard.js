@@ -1,10 +1,11 @@
 import React from "react";
-import { Text, View } from "@tarojs/components";
+import { Text, View, Image } from "@tarojs/components";
 import Taro, { pxTransform } from "@tarojs/taro";
 import LoadImg from "./LoadImg";
 import { ROUTE_PLAYLIST } from "@/constants";
 import clsx from "clsx";
 import { countFormatter } from "@/utils/countFormatter";
+import playLineSvg from "../assets/svgs/play-line.svg";
 
 const PlaylistCard = (props) => {
   const {
@@ -46,7 +47,7 @@ const PlaylistCard = (props) => {
         className="flex items-center my-[6px] mx-0 text-[rgb(146,146,146)] text-[24px]"
         style={{ width: pxTransform(width) }}
       >
-        <Text className="iconfont icon-bofangsanjiaoxing mr-2"></Text>
+        <Image src={playLineSvg} className="w-8 h-8" />
         <Text>{countFormatter(playCount)}</Text>
       </View>
       <View

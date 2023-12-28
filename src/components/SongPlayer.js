@@ -9,6 +9,9 @@ import shuffleFill from "@/assets/svgs/shuffleFill.svg";
 import orderPlayLine from "@/assets/svgs/orderPlayLine.svg";
 import messageFill from "@/assets/svgs/messageFill.svg";
 import messageLine from "@/assets/svgs/messageLine.svg";
+import playFillWhiteSvg from "../assets/svgs/play-fill-white.svg";
+import skipForwardFillWhiteSvg from "../assets/svgs/skip-forward-fill-white.svg";
+import pauseLineWhiteSvg from "../assets/svgs/pause-line-white.svg";
 
 import Taro from "@tarojs/taro";
 import { format } from "date-fns";
@@ -362,17 +365,18 @@ const SongPlayer = (props) => {
                 switchSong("prev");
               }}
             >
-              <Text className="iconfont icon-skip_previous text-[80px] text-[rgba(255,255,255,.9)]" />
+              <Image
+                src={skipForwardFillWhiteSvg}
+                className="w-[80px] h-[80px]"
+              />
             </View>
             <View
               className="flex-1 flex justify-center items-center text-center h-[160px]"
               onClick={togglePlayingOnClick}
             >
-              <Text
-                className={clsx(
-                  `iconfont text-[120px] text-[rgba(255,255,255,.9)]`,
-                  isPlaying ? "icon-ai07" : "icon-bofang1"
-                )}
+              <Image
+                src={isPlaying ? pauseLineWhiteSvg : playFillWhiteSvg}
+                className="w-[120px] h-[120px]"
               />
             </View>
             <View
@@ -381,7 +385,10 @@ const SongPlayer = (props) => {
                 switchSong("next");
               }}
             >
-              <Text className="iconfont icon-skip-next text-[80px] text-[rgba(255,255,255,.9)]" />
+              <Image
+                src={skipForwardFillWhiteSvg}
+                className="w-[80px] h-[80px]"
+              />
             </View>
           </View>
         </View>

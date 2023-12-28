@@ -223,7 +223,7 @@ export const reqUserPlaylist = (data) => {
 };
 
 // 用户收藏的歌手
-export const reqUserSingers = (data) =>{
+export const reqUserSingers = (data) => {
   return request({
     url: "/artist/sublist",
     data: {
@@ -231,4 +231,15 @@ export const reqUserSingers = (data) =>{
       timestamp: new Date().getTime(),
     },
   });
-}
+};
+
+// 喜欢的列表
+export const reqUserLikeList = (data) => {
+  return request({
+    url: "/likelist",
+    data: {
+      ...data,
+      timestamp: new Date().getTime(),
+    },
+  });
+};

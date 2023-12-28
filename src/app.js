@@ -1,6 +1,5 @@
 import { Component } from "react";
 import Taro from "@tarojs/taro";
-import "./assets/iconfont/iconfont.css";
 import "./app.css";
 import { safeAreaRect } from "./module/safeAreaRect";
 
@@ -10,6 +9,10 @@ class App extends Component {
   componentDidShow() {}
 
   onLaunch() {
+    this.initSafeArea();
+  }
+
+  initSafeArea() {
     const systemInfo = Taro.getSystemInfoSync();
     safeAreaRect.bottom = systemInfo.screenHeight - systemInfo.safeArea.bottom;
     safeAreaRect.width = systemInfo.safeArea.width;

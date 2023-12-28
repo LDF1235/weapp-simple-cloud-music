@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { PageContainer, Text, View, Image } from "@tarojs/components";
+import { PageContainer, View, Image } from "@tarojs/components";
 import SongPanel from "@/components/SongPanel";
 import Taro from "@tarojs/taro";
 import { pauseAudio, resumeAudio, switchSong } from "@/module/backgroundAudio";
@@ -7,6 +7,9 @@ import clsx from "clsx";
 import { isTabBarPath } from "@/utils/isTabBarPath";
 import { usePlayerStore } from "@/store/player";
 import { safeAreaRect } from "@/module/safeAreaRect";
+import palyFillBlackSvg from "../assets/svgs/play-fill-black.svg";
+import skipForwardFillBlackSvg from "../assets/svgs/skip-forward-fill-black.svg";
+import pauseLineBlackSvg from "../assets/svgs/pause-line-black.svg";
 
 const BottomPlayPanel = () => {
   const [showSongPanel, setShowSongPanel] = useState(false);
@@ -81,15 +84,16 @@ const BottomPlayPanel = () => {
         </View>
         <View className="flex grow-0 shrink-0 items-center">
           <View className=" text-center" onClick={togglePlayingOnClick}>
-            <Text
-              className={clsx(
-                "iconfont text-[80px]",
-                isPlaying ? "icon-ai07" : "icon-bofang1"
-              )}
+            <Image
+              className="w-[120px] h-[120px] text-black"
+              src={isPlaying ? pauseLineBlackSvg : palyFillBlackSvg}
             />
           </View>
           <View className=" text-center" onClick={playNextSong}>
-            <Text className="iconfont icon-skip-next text-[70px]" />
+            <Image
+              className="w-[80px] h-[80px] text-black"
+              src={skipForwardFillBlackSvg}
+            />
           </View>
         </View>
 

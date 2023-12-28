@@ -34,7 +34,7 @@ const SongCard = (props) => {
       <View className="flex-1 h-full overflow-hidden flex flex-col justify-center pr-10">
         <View
           className={clsx(
-            "text-[36px] w-full text-textPrimary whitespace-nowrap overflow-hidden text-ellipsis",
+            "text-[36px] leading-normal w-full text-textPrimary whitespace-nowrap overflow-hidden text-ellipsis",
             props.titleClassName
           )}
         >
@@ -42,7 +42,7 @@ const SongCard = (props) => {
         </View>
         <View
           className={clsx(
-            "text-[28px] mt-3 w-full text-[rgb(185,185,185)] whitespace-nowrap overflow-hidden text-ellipsis",
+            "text-[28px] leading-normal w-full text-[rgb(185,185,185)] whitespace-nowrap overflow-hidden text-ellipsis",
             props.subTitleClassName
           )}
         >

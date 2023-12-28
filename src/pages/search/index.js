@@ -1,6 +1,13 @@
 import { showLoading, hideLoading } from "@tarojs/taro";
 import { useMemo, useState } from "react";
-import { Button, Input, ScrollView, Text, View } from "@tarojs/components";
+import {
+  Button,
+  Image,
+  Input,
+  ScrollView,
+  Text,
+  View,
+} from "@tarojs/components";
 import SingerCard from "@/components/SingerCard";
 import SongCard from "@/components/SongCard";
 import {
@@ -14,15 +21,12 @@ import PlaylistCard from "@/components/PlaylistCard";
 import clsx from "clsx";
 import { safeAreaRect } from "@/module/safeAreaRect";
 import PlayerPanel from "@/components/PlayerPanel";
+import deleteBin6LineSvg from "../../assets/svgs/delete-bin-6-line.svg";
 
 const enumSearchTypes = {
   song: 1,
   singer: 100,
   playlist: 1000,
-};
-
-const initLocalKeywords = () => {
-  return getStorageKeyword().data;
 };
 
 const searchResultTabs = [
@@ -50,9 +54,9 @@ const searchResultTabs = [
 
 const Search = () => {
   const [isInputFocus, setIsInputFocus] = useState(false);
-  const [searchKeyword, setSearchKeyword] = useState(undefined);
+  const [searchKeyword, setSearchKeyword] = useState("");
   const [activeTab, setActiveTab] = useState(searchResultTabs[0]);
-  const [localKeywords, setLocalKeywords] = useState(initLocalKeywords);
+  const [localKeywords, setLocalKeywords] = useState(getStorageKeyword);
   const [isSearchSucceed, setIsSearchSucceed] = useState(false);
   const [resultSongs, setResultSongs] = useState([]);
   const [resultSingers, setResultSingers] = useState([]);
@@ -60,7 +64,7 @@ const Search = () => {
 
   const crossWireOnClick = () => {
     setIsInputFocus(true);
-    setSearchKeyword(undefined);
+    setSearchKeyword("");
   };
 
   const getAllTypeResult = async (keyword) => {
@@ -151,7 +155,7 @@ const Search = () => {
     }
   };
 
-  const isSearchButtonDisabled = !searchKeyword?.trim();
+  const isSearchButtonDisabled = !searchKeyword.trim();
 
   const keywordOnClick = (keyword, keywordIndex) => {
     return () => {
@@ -174,7 +178,7 @@ const Search = () => {
   }, [isSearchSucceed, activeTab]);
 
   const showClearCrossWire = useMemo(() => {
-    return searchKeyword?.trim() && isInputFocus;
+    return searchKeyword.trim() && isInputFocus;
   }, [isInputFocus, searchKeyword]);
 
   const showSingerResult = useMemo(() => {
@@ -193,7 +197,7 @@ const Search = () => {
   }, [activeTab]);
 
   const searchBtnOnClick = () => {
-    const newKeyword = searchKeyword?.trim();
+    const newKeyword = searchKeyword.trim();
     const isAlreadyExist = localKeywords.includes(newKeyword);
     if (newKeyword) {
       getSearchResult(activeTab.value, newKeyword);
@@ -279,13 +283,13 @@ const Search = () => {
             ))}
             {localKeywords.length > 0 && (
               <View
-                className="py-2 px-4 mr-4 mb-4 bg-white text-[24px] rounded-lg"
+                className="px-2 mr-4 mb-4 bg-white text-[24px] rounded-lg flex items-center justify-center"
                 onClick={() => {
                   removeStorageKeyword();
                   setLocalKeywords([]);
                 }}
               >
-                <Text className="iconfont icon-Trash" />
+                <Image src={deleteBin6LineSvg} className="h-6 w-6" />
               </View>
             )}
           </View>

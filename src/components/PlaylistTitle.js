@@ -1,7 +1,8 @@
 import React from "react";
-import { View, Text } from "@tarojs/components";
+import { View, Text, Image } from "@tarojs/components";
 import Taro from "@tarojs/taro";
 import clsx from "clsx";
+import arrowRightSLineSvg from "../assets/svgs/arrow-right-s-line.svg";
 
 const stringify = (target) => {
   return Object.entries(target)
@@ -30,10 +31,10 @@ const PlaylistTitle = (props) => {
       {showMoreBtn && (
         <View
           className="flex items-center text-[28px] font-bold text-[rgb(102,102,102)]"
-          onClick={onViewMore||viewMoreList}
+          onClick={onViewMore || viewMoreList}
         >
           <Text className="mr-5">{right}</Text>
-          <Text className="iconfont icon-youjiantou"></Text>
+          <Image src={arrowRightSLineSvg} className="h-8 w-8" />
         </View>
       )}
     </View>

@@ -14,8 +14,9 @@ import {
 } from "@/services";
 import md5 from "md5";
 import { setStorageUserInfo } from "@/storage";
-import { userInfoStore } from "@/store/userInfo";
+import { useUserInfoStore } from "@/store/userInfo";
 import { ROUTE_ME } from "@/constants";
+import linkSvg from "../../assets/svgs/link.svg";
 
 const enumLoginWay = {
   phone: 0,
@@ -220,6 +221,7 @@ const Login = () => {
   };
 
   const afterLoginSuccess = (loginRes) => {
+    Taro.showToast({ title: "登录成功" });
     const userInfo = {
       account: loginRes.account,
       profile: loginRes.profile,
@@ -227,7 +229,7 @@ const Login = () => {
     };
 
     setStorageUserInfo(userInfo);
-    userInfoStore.setState({ userInfo });
+    useUserInfoStore.setState({ userInfo });
     Taro.switchTab({ url: ROUTE_ME });
   };
 
@@ -242,7 +244,7 @@ const Login = () => {
         </View>
         <View className="flex items-center justify-center">
           <Image className="w-[140px] h-[140px]" src={cloudMusicLogo}></Image>
-          <Text className="iconfont icon-action-connection mx-[30px] text-[32px] text-[#666]"></Text>
+          <Image src={linkSvg} className="mx-[30px] w-8 h-8" />
           <Image
             className="w-[140px] h-[140px]"
             src={simpleCloudMusicLogo}
