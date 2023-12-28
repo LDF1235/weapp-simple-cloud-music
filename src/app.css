@@ -12,6 +12,17 @@
   }
 }
 
+/* 每日推荐动画 */
+@keyframes daily-recommend-bg {
+  0% {
+    background-position: 50% 0%;
+  }
+
+  100% {
+    background-position: 50% 100%;
+  }
+}
+
 page {
   box-sizing: border-box;
   font-family: -apple-system, BlinkMacSystemFont, PingFang SC, Hiragino Sans GB,

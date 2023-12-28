@@ -11,6 +11,7 @@ import {
   reqQrCode,
   reqQrCodeKey,
   reqSendAuthCode,
+  reqUserLikeList,
 } from "@/services";
 import md5 from "md5";
 import { setStorageUserInfo } from "@/storage";
@@ -221,16 +222,22 @@ const Login = () => {
   };
 
   const afterLoginSuccess = (loginRes) => {
-    Taro.showToast({ title: "登录成功" });
+    Taro.showToast({ title: "登录成功", icon: null });
     const userInfo = {
       account: loginRes.account,
       profile: loginRes.profile,
       bindings: loginRes.bindings,
     };
-
     setStorageUserInfo(userInfo);
     useUserInfoStore.setState({ userInfo });
     Taro.switchTab({ url: ROUTE_ME });
+    reqUserLikeList({ uid: loginRes.account.id }).then((res) => {
+      if (res.code === 200) {
+        useUserInfoStore.setState({
+          likeListIds: new Set(res.ids),
+        });
+      }
+    });
   };
 
   return (

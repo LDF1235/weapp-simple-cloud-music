@@ -243,3 +243,33 @@ export const reqUserLikeList = (data) => {
     },
   });
 };
+
+// 每日歌单推荐
+export const reqRecommendDailyPlaylist = () => {
+  return request({
+    url: "/recommend/resource",
+  });
+};
+
+// 相似歌单推荐
+export const reqRecommendSimilarPlaylist = (data) => {
+  return request({
+    url: "/simi/playlist",
+    data,
+  });
+};
+
+// 相似歌手推荐
+export const reqRecommendSimilarSinger = (data) => {
+  return request({
+    url: "/simi/artist",
+    data,
+  });
+};
+
+// 今日推荐
+export const reqDailySongs = () => {
+  return request({
+    url: "/recommend/songs",
+  });
+};
