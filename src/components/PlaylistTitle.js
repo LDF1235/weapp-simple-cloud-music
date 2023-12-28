@@ -10,7 +10,7 @@ const stringify = (target) => {
 };
 
 const PlaylistTitle = (props) => {
-  const { leftContent, showMoreBtn, className } = props;
+  const { left, showMoreBtn, className, right = "更多", onViewMore } = props;
 
   const viewMoreList = () => {
     const { moreListParam, moreListPath } = props;
@@ -18,26 +18,21 @@ const PlaylistTitle = (props) => {
     if (moreListPath && !moreListParam) {
       Taro.navigateTo({ url: moreListPath });
     } else {
-      const param = { ...moreListParam, topBarContent: leftContent };
+      const param = { ...moreListParam, topBarText: left };
       const str = stringify(param);
       Taro.navigateTo({ url: `${moreListPath}?${str}` });
     }
   };
 
   return (
-    <View
-      className={clsx(
-        "flex justify-between items-center py-0 px-10 mb-5",
-        className
-      )}
-    >
-      <Text className="text-[40px] font-bold">{leftContent}</Text>
+    <View className={clsx("flex justify-between items-center mb-5", className)}>
+      <Text className="text-[40px] font-bold">{left}</Text>
       {showMoreBtn && (
         <View
           className="flex items-center text-[28px] font-bold text-[rgb(102,102,102)]"
-          onClick={viewMoreList}
+          onClick={onViewMore}
         >
-          <Text className="mr-5">更多</Text>
+          <Text className="mr-5">{right}</Text>
           <Text className="iconfont icon-youjiantou"></Text>
         </View>
       )}

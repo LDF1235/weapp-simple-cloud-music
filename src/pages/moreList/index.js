@@ -51,6 +51,7 @@ const MoreList = () => {
   );
 
   useEffect(() => {
+    Taro.setNavigationBarTitle({ title: router.params.topBarText });
     Taro.showLoading({ title: "加载中" });
     getMoreList({ offset: 0, before: 0 });
   }, [router, getMoreList]);

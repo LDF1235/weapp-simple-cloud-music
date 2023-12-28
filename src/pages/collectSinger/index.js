@@ -1,31 +1,39 @@
 import ScrollBottomLoading from "@/components/ScrollBottomLoading";
 import SingerCard from "@/components/SingerCard";
-import { reqMoreSingerList } from "@/services";
+import { reqUserSingers } from "@/services";
 import { useEffect, useRef, useState } from "react";
 import { ScrollView, View } from "@tarojs/components";
 import { safeAreaRect } from "@/module/safeAreaRect";
 
-const MoreSinger = () => {
+const Index = () => {
   const [singerList, setSingerList] = useState([]);
   const [hasMore, setHasMore] = useState(false);
 
   const isPrevRequestOkRef = useRef(true);
   const offsetRef = useRef(0);
 
-  const getMoreSinger = async () => {
-    const response = await reqMoreSingerList({
+  const getSingers = async () => {
+    const response = await reqUserSingers({
       offset: offsetRef.current,
       limit: 30,
     });
 
     if (response.code === 200) {
       setHasMore(response.more);
-      setSingerList((pre) => [...pre, ...response.artists]);
+      setSingerList((prev) =>
+        prev.concat(
+          response.data.map((x) => ({
+            id: x.id,
+            img1v1Url: x.img1v1Url,
+            name: x.name,
+          }))
+        )
+      );
     }
   };
 
   useEffect(() => {
-    getMoreSinger();
+    getSingers();
   }, []);
 
   const listScrollToLower = () => {
@@ -33,7 +41,7 @@ const MoreSinger = () => {
 
     isPrevRequestOkRef.current = false;
 
-    getMoreSinger().then(() => {
+    getSingers().then(() => {
       isPrevRequestOkRef.current = true;
     });
   };
@@ -70,4 +78,4 @@ const MoreSinger = () => {
   );
 };
 
-export default MoreSinger;
+export default Index;

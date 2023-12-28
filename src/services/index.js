@@ -210,3 +210,25 @@ export const reqLogout = () => {
     method: "POST",
   });
 };
+
+// 用户收藏的歌单
+export const reqUserPlaylist = (data) => {
+  return request({
+    url: "/user/playlist",
+    data: {
+      ...data,
+      timestamp: new Date().getTime(),
+    },
+  });
+};
+
+// 用户收藏的歌手
+export const reqUserSingers = (data) =>{
+  return request({
+    url: "/artist/sublist",
+    data: {
+      ...data,
+      timestamp: new Date().getTime(),
+    },
+  });
+}

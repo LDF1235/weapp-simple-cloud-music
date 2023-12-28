@@ -177,12 +177,13 @@ const Index = () => {
       <View>
         <PlaylistTitle
           showMoreBtn
-          leftContent={`${activeSubCategory?.name || "默认"} - 精选歌单`}
+          left={`${activeSubCategory?.name || "默认"} - 精选歌单`}
           moreListPath={ROUTE_MORE_LIST}
           moreListParam={{
             cat: activeSubCategory?.value,
             type: "featured",
           }}
+          className="px-10"
         />
         <ScrollView
           className="flex mb-4 h-11 whitespace-nowrap"
@@ -248,12 +249,13 @@ const Index = () => {
       <View className="mt-[60px]">
         <PlaylistTitle
           showMoreBtn
-          leftContent="官方歌单"
+          left="官方歌单"
           moreListPath={ROUTE_MORE_LIST}
           moreListParam={{
             cat: "官方",
             type: "official",
           }}
+          className="px-10"
         />
         <ScrollView
           className="flex h-[560px] whitespace-nowrap"
@@ -275,7 +277,7 @@ const Index = () => {
       </View>
 
       <View className="mt-[60px]">
-        <PlaylistTitle leftContent="排行榜" showMoreBtn={false} />
+        <PlaylistTitle left="排行榜" showMoreBtn={false} className="px-10" />
         <ScrollView
           className="flex h-[560px] whitespace-nowrap"
           scrollX
@@ -297,9 +299,12 @@ const Index = () => {
 
       <View className="mt-10">
         <PlaylistTitle
-          leftContent="热门歌手"
+          left="热门歌手"
           showMoreBtn
-          moreListPath={ROUTE_MORE_SINGER}
+          className="px-10"
+          onViewMore={() => {
+            Taro.navigateTo({ url: ROUTE_MORE_SINGER });
+          }}
         />
         <View className="flex justify-between flex-wrap px-10">
           {singerList.map((singer) => (
@@ -316,12 +321,13 @@ const Index = () => {
       <View className="mt-[60px]">
         <PlaylistTitle
           showMoreBtn
-          leftContent={`${activeHighQualityTag?.name || "默认"} - 精品歌单`}
+          left={`${activeHighQualityTag?.name || "默认"} - 精品歌单`}
           moreListParam={{
             cat: activeHighQualityTag?.value,
             type: "highQuality",
           }}
           moreListPath={ROUTE_MORE_LIST}
+          className="px-10"
         />
         <ScrollView className="flex h-11 whitespace-nowrap" scrollX enableFlex>
           {highQualityTags.map(({ name, value }, index) => (

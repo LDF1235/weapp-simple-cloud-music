@@ -10,6 +10,8 @@ export default {
     "pages/singer/index",
     "pages/singerSong/index",
     "pages/login/index",
+    "pages/collectPlaylist/index",
+    "pages/collectSinger/index",
   ],
   requiredBackgroundModes: ["audio"],
   window: {

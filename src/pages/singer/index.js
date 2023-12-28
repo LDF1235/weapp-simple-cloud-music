@@ -74,8 +74,8 @@ const SingerInfo = () => {
       </View>
 
       <PlaylistTitle
-        leftContent="热门 50 首"
-        className="mt-10 grow-0 shrink-0"
+        left="热门 50 首"
+        className="mt-10 mx-10 grow-0 shrink-0"
         showMoreBtn
         moreListPath={ROUTE_SINGER_SONG}
         moreListParam={{ id: singerInfo.id }}
