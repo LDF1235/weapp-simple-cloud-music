@@ -15,7 +15,13 @@ import {
   reqHotSinger,
 } from "@/services";
 
-import { ROUTE_MORE_LIST, ROUTE_MORE_SINGER, ROUTE_SEARCH } from "@/constants";
+import {
+  ROUTE_FEATURED_PLAYLIST,
+  ROUTE_HIGH_QUALITY_PLAYLIST,
+  ROUTE_MORE_SINGER,
+  ROUTE_OFFICIAL_PLAYLIST,
+  ROUTE_SEARCH,
+} from "@/constants";
 import clsx from "clsx";
 
 const Index = () => {
@@ -178,10 +184,10 @@ const Index = () => {
         <PlaylistTitle
           showMoreBtn
           left={`${activeSubCategory?.name || "默认"} - 精选歌单`}
-          moreListPath={ROUTE_MORE_LIST}
-          moreListParam={{
-            cat: activeSubCategory?.value,
-            type: "featured",
+          onViewMore={() => {
+            Taro.navigateTo({
+              url: `${ROUTE_FEATURED_PLAYLIST}?cat=${activeSubCategory?.value}`,
+            });
           }}
           className="px-10"
         />
@@ -250,10 +256,8 @@ const Index = () => {
         <PlaylistTitle
           showMoreBtn
           left="官方歌单"
-          moreListPath={ROUTE_MORE_LIST}
-          moreListParam={{
-            cat: "官方",
-            type: "official",
+          onViewMore={() => {
+            Taro.navigateTo({ url: `${ROUTE_OFFICIAL_PLAYLIST}?cat=官方` });
           }}
           className="px-10"
         />
@@ -322,11 +326,11 @@ const Index = () => {
         <PlaylistTitle
           showMoreBtn
           left={`${activeHighQualityTag?.name || "默认"} - 精品歌单`}
-          moreListParam={{
-            cat: activeHighQualityTag?.value,
-            type: "highQuality",
+          onViewMore={() => {
+            Taro.navigateTo({
+              url: `${ROUTE_HIGH_QUALITY_PLAYLIST}?cat=${activeHighQualityTag?.value}`,
+            });
           }}
-          moreListPath={ROUTE_MORE_LIST}
           className="px-10"
         />
         <ScrollView className="flex h-11 whitespace-nowrap" scrollX enableFlex>

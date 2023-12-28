@@ -19,6 +19,7 @@ const Index = () => {
     });
 
     if (response.code === 200) {
+      offsetRef.current+=30;
       setHasMore(response.more);
       setSingerList((prev) =>
         prev.concat(

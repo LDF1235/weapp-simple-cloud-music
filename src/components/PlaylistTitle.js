@@ -30,7 +30,7 @@ const PlaylistTitle = (props) => {
       {showMoreBtn && (
         <View
           className="flex items-center text-[28px] font-bold text-[rgb(102,102,102)]"
-          onClick={onViewMore}
+          onClick={onViewMore||viewMoreList}
         >
           <Text className="mr-5">{right}</Text>
           <Text className="iconfont icon-youjiantou"></Text>

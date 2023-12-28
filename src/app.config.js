@@ -4,7 +4,6 @@ export default {
     "pages/found/index",
     "pages/recommend/index",
     "pages/search/index",
-    "pages/moreList/index",
     "pages/moreSinger/index",
     "pages/playlist/index",
     "pages/singer/index",
@@ -12,6 +11,9 @@ export default {
     "pages/login/index",
     "pages/collectPlaylist/index",
     "pages/collectSinger/index",
+    "pages/featuredPlaylist/index",
+    "pages/officialPlaylist/index",
+    "pages/highQualityPlaylist/index",
   ],
   requiredBackgroundModes: ["audio"],
   window: {

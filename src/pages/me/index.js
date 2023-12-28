@@ -67,8 +67,7 @@ const Me = () => {
           <View className=" p-5 mx-10 bg-white rounded-[20px] flex">
             <Image
               src={userInfo.profile.avatarUrl}
-              className="w-[120px] rounded-[50%] border-solid border-gray-300 border-[1px]"
-              mode="widthFix"
+              className="w-[120px] h-[120px] rounded-[50%] border-solid border-gray-300 border-[1px]"
             />
             <View className="text-[32px] font-bold ml-4">
               {userInfo.profile.nickname}
