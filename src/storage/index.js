@@ -40,6 +40,9 @@ export const setStoragePlayMode = (mode) => {
 };
 export const getStoragePlayMode = () =>
   getStorage(STORAGE_PLAY_MODE, enumPlayMode.order);
+export const remoteStoragePlayMode = () => {
+  removeStorage({ key: STORAGE_PLAY_MODE });
+};
 
 // 用户信息
 export const setStorageUserInfo = (userInfo) => {
@@ -49,6 +52,9 @@ export const setStorageUserInfo = (userInfo) => {
   });
 };
 export const getStorageUserInfo = () => getStorage(STORAGE_USER_INFO, null);
+export const remoteStorageUserInfo = () => {
+  removeStorage({ key: STORAGE_USER_INFO });
+};
 
 // cookie
 export const setStorageCookie = (data) => {
@@ -58,3 +64,6 @@ export const setStorageCookie = (data) => {
   });
 };
 export const getStorageCookies = () => getStorage(STORAGE_COOKIE, []);
+export const remoteStorageCookies = () => {
+  removeStorage({ key: STORAGE_COOKIE });
+};
