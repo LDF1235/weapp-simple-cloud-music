@@ -291,3 +291,10 @@ export const reqPersonalFm = () => {
     },
   });
 };
+
+export const reqTogglePlaylistSubscribe = (data) => {
+  return request({
+    url: `/playlist/subscribe?id=${data.id}&t=${data.t}`,
+    method: "POST",
+  });
+};

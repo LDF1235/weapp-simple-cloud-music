@@ -8,7 +8,11 @@ import React, {
 } from "react";
 import Taro, { useRouter, showLoading, hideLoading } from "@tarojs/taro";
 import SongCard from "@/components/SongCard";
-import { reqPlaylistSongs, reqSongDetail } from "@/services";
+import {
+  reqPlaylistSongs,
+  reqSongDetail,
+  reqTogglePlaylistSubscribe,
+} from "@/services";
 import ScrollBottomLoading from "@/components/ScrollBottomLoading";
 import LoadImg from "@/components/LoadImg";
 import { getSongDetail } from "@/utils/getSongDetail";
@@ -151,6 +155,19 @@ const Playlist = () => {
     playWholePlaylist(allTrackIdsRef.current, getSongDetail(songs[0]));
   };
 
+  const handleToggleSubscribe = async () => {
+    const { subscribed } = playlistInfo;
+
+    reqTogglePlaylistSubscribe({
+      id: parseInt(playlistId),
+      t: subscribed ? 2 : 1,
+    }).then((res) => {
+      if (res.code === 200) {
+        setPlaylistInfo((prev) => ({ ...prev, subscribed: !subscribed }));
+      }
+    });
+  };
+
   return (
     <View
       className="h-full bg-bgPrimary flex-col flex"
@@ -217,7 +234,7 @@ const Playlist = () => {
                   : "mc-primary-button",
                 " ml-10 w-auto flex-1 flex items-center justify-center"
               )}
-              onClick={playTheList}
+              onClick={handleToggleSubscribe}
             >
               <Image
                 src={
