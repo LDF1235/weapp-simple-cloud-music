@@ -92,6 +92,8 @@ export const playSong = async (songDetail) => {
         }
       }
 
+      console.log("nextPlaylistSongs ------------->", nextPlaylistSongs);
+
       return {
         isPlaying: true,
         showPlayer: true,

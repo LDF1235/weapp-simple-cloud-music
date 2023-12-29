@@ -322,11 +322,7 @@ const Search = () => {
         )}
         {showSongResult &&
           resultSongs.map((item) => (
-            <SongCard
-              isInPlaylist={false}
-              key={item.id}
-              {...getSongDetail(item)}
-            />
+            <SongCard key={item.id} {...getSongDetail(item)} />
           ))}
         {showResultTitle && (
           <View className="mt-10 mb-5 pl-10 text-[32px] font-bold">歌手</View>

@@ -9,6 +9,7 @@ import { getSongDetail } from "@/utils/getSongDetail";
 import { ROUTE_SINGER_SONG } from "@/constants";
 import { safeAreaRect } from "@/module/safeAreaRect";
 import { playWholePlaylist } from "@/module/backgroundAudio";
+import playCircleLineSvg from "../../assets/svgs/play-circle-line.svg";
 
 const { showLoading, hideLoading } = Taro;
 
@@ -87,11 +88,7 @@ const SingerInfo = () => {
       <View className="flex-1 overflow-hidden">
         <ScrollView enableFlex scrollY showScrollbar className="h-full">
           {songs.map((item) => (
-            <SongCard
-              isInPlaylist={false}
-              key={item.id}
-              {...getSongDetail(item)}
-            />
+            <SongCard key={item.id} {...getSongDetail(item)} />
           ))}
         </ScrollView>
       </View>

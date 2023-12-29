@@ -109,11 +109,7 @@ const MoreSingerSong = () => {
           className="h-full"
         >
           {songs.map((item) => (
-            <SongCard
-              {...getSongDetail(item)}
-              key={item.id}
-              isInPlaylist={false}
-            />
+            <SongCard {...getSongDetail(item)} key={item.id} />
           ))}
           {isHasMore && <ScrollBottomLoading />}
         </ScrollView>

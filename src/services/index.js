@@ -273,3 +273,13 @@ export const reqDailySongs = () => {
     url: "/recommend/songs",
   });
 };
+
+// 私人fm
+export const reqPersonalFm = () => {
+  return request({
+    url: "/personal_fm",
+    data: {
+      timestamp: new Date().getTime(),
+    },
+  });
+};

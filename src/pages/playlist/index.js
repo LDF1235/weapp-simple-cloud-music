@@ -257,7 +257,7 @@ const Playlist = () => {
           showScrollbar
         >
           {songs.map((item) => (
-            <SongCard isInPlaylist key={item.id} {...getSongDetail(item)} />
+            <SongCard key={item.id} {...getSongDetail(item)} />
           ))}
           {showLoadingCard && <ScrollBottomLoading />}
         </ScrollView>

@@ -2,6 +2,7 @@ import NoticeLogin from "@/components/NoticeLogin";
 import PlaylistTitle from "@/components/PlaylistTitle";
 import {
   reqDailySongs,
+  reqPersonalFm,
   reqRecommendDailyPlaylist,
   reqRecommendSimilarPlaylist,
   reqRecommendSimilarSinger,
@@ -17,6 +18,9 @@ import SingerCard from "@/components/SingerCard";
 import calendarLineSvg from "../../assets/svgs/calendar-line.svg";
 import refreshLineSvg from "../../assets/svgs/refresh-line.svg";
 import { useCallback } from "react";
+import radioFillSvg from "../../assets/svgs/radio-fill.svg";
+import { ROUTE_DAILY_RECOMMEND } from "@/constants";
+import Taro from "@tarojs/taro";
 
 const Index = () => {
   const { userInfo, likeListIds } = useUserInfoStore();
@@ -26,6 +30,7 @@ const Index = () => {
   const [singerName, setSingerName] = useState("");
   const [similarSingers, setSimilarSingers] = useState([]);
   const [firstDailySong, setFirstDailySong] = useState(null);
+  const [fmFirstSong, setFmFirstSong] = useState(null);
 
   const fetchSimilarRecommend = useCallback(() => {
     if (!likeListIds.size) return;
@@ -74,7 +79,21 @@ const Index = () => {
   useEffect(() => {
     fetchDailyPlaylist();
     fetchDailySongs();
+    fetchPersonalFm();
   }, []);
+
+  const fetchPersonalFm = () => {
+    reqPersonalFm().then((res) => {
+      if (res.code === 200) {
+        const song = res.data[0];
+        setFmFirstSong({
+          name: song.name,
+          singers: song.artists?.map((item) => item.name)?.join("/") || "/",
+          picUrl: song.album.picUrl,
+        });
+      }
+    });
+  };
 
   const fetchDailyPlaylist = () => {
     reqRecommendDailyPlaylist().then((res) => {
@@ -144,7 +163,12 @@ const Index = () => {
             />
           </View>
 
-          <View className="relative overflow-hidden rounded-[20px] px-10 pb-10 mx-10 bg-[linear-gradient(to_bottom,rgba(0,0,0,0)_0%,rgba(0,0,0,0.1)_20%,rgba(0,0,0,0.2)_40%,rgba(0,0,0,0.3)_60%,rgba(0,0,0,0.5)_100%)]">
+          <View
+            onClick={() => {
+              Taro.navigateTo({ url: ROUTE_DAILY_RECOMMEND });
+            }}
+            className="relative overflow-hidden rounded-[20px] px-10 pb-10 mx-10 bg-[linear-gradient(to_bottom,rgba(0,0,0,0)_0%,rgba(0,0,0,0.1)_20%,rgba(0,0,0,0.2)_40%,rgba(0,0,0,0.3)_60%,rgba(0,0,0,0.5)_100%)]"
+          >
             <View
               className="absolute left-0 top-0 w-full h-full animate-[daily-recommend-bg_10s_ease-in-out_infinite_alternate] bg-no-repeat bg-cover "
               style={{
@@ -163,9 +187,39 @@ const Index = () => {
               {firstDailySong?.singers}
             </View>
 
-            <View className="text-right relative z-[1] text-white mt-5">
+            <View className="text-right relative z-[1] text-white mt-5 flex items-center justify-end">
               <Image src={calendarLineSvg} className="w-8 h-8" />
-              <Text> {renderDate()}</Text>
+              <Text className="ml-4"> {renderDate()}</Text>
+            </View>
+          </View>
+
+          <View
+            className="mt-10 mx-10 rounded-[20px] bg-center bg-cover bg-no-repeat overflow-hidden"
+            style={{
+              backgroundImage: fmFirstSong
+                ? `url(${fmFirstSong.picUrl})`
+                : undefined,
+            }}
+          >
+            <View className="bg-[rgba(0,0,0,.4)] backdrop-filter-[30px] flex p-5">
+              <Image
+                className="w-[140px] h-[140px]"
+                src={fmFirstSong ? fmFirstSong.picUrl : ""}
+              />
+
+              <View className="flex-1 overflow-hidden ml-5">
+                <View className="w-full text-ellipsis overflow-hidden whitespace-nowrap text-[36px] text-white font-bold">
+                  {fmFirstSong?.name}
+                </View>
+                <View className="w-full mt-5 text-[28px] text-[rgba(255,255,255,.7)] text-ellipsis overflow-hidden whitespace-nowrap">
+                  {fmFirstSong?.singers} - {fmFirstSong?.name}
+                </View>
+
+                <View className="flex mt-5 justify-end items-center text-[24px]">
+                  <Image src={radioFillSvg} className="w-8 h-8" />
+                  <Text className="ml-4 text-white">私人FM</Text>
+                </View>
+              </View>
             </View>
           </View>
 
