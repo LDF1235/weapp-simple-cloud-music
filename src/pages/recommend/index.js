@@ -6,6 +6,7 @@ import {
   reqRecommendDailyPlaylist,
   reqRecommendSimilarPlaylist,
   reqRecommendSimilarSinger,
+  reqRecommendSimilarSong,
   reqSongDetail,
 } from "@/services";
 import { useUserInfoStore } from "@/store/userInfo";
@@ -21,6 +22,7 @@ import { useCallback } from "react";
 import radioFillSvg from "../../assets/svgs/radio-fill.svg";
 import { ROUTE_DAILY_RECOMMEND } from "@/constants";
 import Taro from "@tarojs/taro";
+import SongCard from "@/components/SongCard";
 
 const Index = () => {
   const { userInfo, likeListIds } = useUserInfoStore();
@@ -29,6 +31,7 @@ const Index = () => {
   const [songName, setSongName] = useState("");
   const [singerName, setSingerName] = useState("");
   const [similarSingers, setSimilarSingers] = useState([]);
+  const [similarSongs, setSimilarSongs] = useState([]);
   const [firstDailySong, setFirstDailySong] = useState(null);
   const [fmFirstSong, setFmFirstSong] = useState(null);
 
@@ -38,6 +41,18 @@ const Index = () => {
     const songId = [...likeListIds][
       Math.floor(Math.random() * likeListIds.size)
     ];
+    reqRecommendSimilarSong({ id: songId }).then((res) => {
+      setSimilarSongs(
+        res.songs.map((x) => ({
+          id: x.id,
+          name: x.name,
+          durationTime: x.duration,
+          picUrl: x.album.picUrl,
+          singers: x.artists.map((item) => item.name)?.join("/") || "/",
+          epname: x.album.epname,
+        }))
+      );
+    });
     reqSongDetail({ ids: songId }).then((res) => {
       if (res.code === 200) {
         const ar = res.songs[0].ar;
@@ -246,6 +261,28 @@ const Index = () => {
                 />
               ))}
             </ScrollView>
+
+            <PlaylistTitle
+              left="相似歌曲推荐"
+              showMoreBtn={false}
+              className="mx-10 mt-5"
+            />
+            <View className="mx-10">
+              <View className="text-[#8d8d8d] text-[24px] h-full text-ellipsis overflow-hidden whitespace-nowrap">
+                根据单曲《{songName}》推荐
+              </View>
+            </View>
+            {similarSongs.map((x) => (
+              <SongCard
+                key={x.id}
+                id={x.id}
+                picUrl={x.picUrl}
+                name={x.name}
+                epname={x.epname}
+                durationTime={x.durationTime}
+                singers={x.singers}
+              />
+            ))}
 
             <PlaylistTitle
               left="相似歌单推荐"

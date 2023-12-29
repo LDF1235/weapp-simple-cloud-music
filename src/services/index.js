@@ -267,6 +267,14 @@ export const reqRecommendSimilarSinger = (data) => {
   });
 };
 
+// 相似歌曲推荐
+export const reqRecommendSimilarSong = (data) => {
+  return request({
+    url: "/simi/song",
+    data,
+  });
+};
+
 // 今日推荐
 export const reqDailySongs = () => {
   return request({
