@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Button, ScrollView, View, Text, Image } from "@tarojs/components";
+import { ScrollView, View, Text, Image } from "@tarojs/components";
 import Taro, { showLoading, hideLoading } from "@tarojs/taro";
 import PlaylistCard from "@/components/PlaylistCard";
 import PlaylistTitle from "@/components/PlaylistTitle";
 import SingerCard from "@/components/SingerCard";
-// import BottomPlayPanel from "@/components/BottomPlayPanel";
 import {
   reqHotSubCategories,
   reqCategories,
@@ -24,6 +23,8 @@ import {
 } from "@/constants";
 import clsx from "clsx";
 import searchLineSvg from "../../assets/svgs/search-line.svg";
+import PlayerPanel from "@/components/PlayerPanel";
+import { usePlayerStore } from "@/store/player";
 
 const Index = () => {
   const [categories, setCategories] = useState([]);
@@ -36,6 +37,7 @@ const Index = () => {
   const [highQualityTags, setHighQualityTags] = useState([]);
   const [highQualityPlayList, setHighQualityPlayList] = useState([]);
   const [singerList, setSingerList] = useState([]);
+  const { showPlayer } = usePlayerStore();
 
   const getCategories = useCallback(async () => {
     const [categoriesRes, hotSubCategoriesRes] = await Promise.all([
@@ -371,11 +373,8 @@ const Index = () => {
           ))}
         </ScrollView>
       </View>
-      <View className="mt-[80px] pb-[240px] px-10">
-        <Button className="mc-default-button">关于</Button>
-      </View>
-
-      {/* <BottomPlayPanel /> */}
+      <View className={showPlayer ? "h-[140px]" : "h-10"} />
+      <PlayerPanel />
     </View>
   );
 };

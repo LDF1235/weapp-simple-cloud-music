@@ -10,6 +10,8 @@ import { ROUTE_SINGER_SONG } from "@/constants";
 import { safeAreaRect } from "@/module/safeAreaRect";
 import { playWholePlaylist } from "@/module/backgroundAudio";
 import playCircleLineSvg from "../../assets/svgs/play-circle-line.svg";
+import PlayerPanel from "@/components/PlayerPanel";
+import { usePlayerStore } from "@/store/player";
 
 const { showLoading, hideLoading } = Taro;
 
@@ -18,6 +20,7 @@ const SingerInfo = () => {
 
   const [singerInfo, setSingerInfo] = useState({});
   const [songs, setSongs] = useState([]);
+  const { showPlayer } = usePlayerStore();
 
   useEffect(() => {
     const fetchSingerInfo = async () => {
@@ -92,6 +95,8 @@ const SingerInfo = () => {
           ))}
         </ScrollView>
       </View>
+      {showPlayer && <View className="h-[130px] grow-0 shrink-0" />}
+      <PlayerPanel />
     </View>
   );
 };

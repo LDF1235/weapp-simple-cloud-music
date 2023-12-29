@@ -18,6 +18,8 @@ import { setStorageUserInfo } from "@/storage";
 import { useUserInfoStore } from "@/store/userInfo";
 import { ROUTE_ME } from "@/constants";
 import linkSvg from "../../assets/svgs/link.svg";
+import PlayerPanel from "@/components/PlayerPanel";
+import { usePlayerStore } from "@/store/player";
 
 const enumLoginWay = {
   phone: 0,
@@ -44,6 +46,7 @@ const Login = () => {
   const [showQrCodeReset, setShowQrCodeReset] = useState(false);
   const authCodeSecondTimerRef = useRef();
   const authCodeSecondsRef = useRef();
+  const { showPlayer } = usePlayerStore();
   authCodeSecondsRef.current = authCodeSeconds;
 
   const isPhoneAuthCode = phoneLoginWay === enumPhoneLoginWay.authCode;
@@ -242,10 +245,10 @@ const Login = () => {
 
   return (
     <View
-      className="h-full bg-bgPrimary"
+      className="h-full bg-bgPrimary flex flex-col"
       style={{ paddingBottom: safeAreaRect.bottom }}
     >
-      <View className="pt-10 px-10">
+      <View className="pt-10 px-10 grow-0 shrink-0">
         <View className="mb-10 text-[24px] text-[#666] text-center">
           请使用网易云音乐账号登录
         </View>
@@ -368,27 +371,30 @@ const Login = () => {
             </Button>
           </View>
         )}
+      </View>
 
-        <View className="flex justify-center items-center absolute bottom-20 left-1/2 -translate-x-1/2 h-[50px] text-primary">
-          <View
-            onClick={() => {
-              switchLoginWay(enumLoginWay.phone);
-            }}
-            className="text-[32px] text-primary"
-          >
-            {loginWay === enumLoginWay.phone ? "二维码登录" : "手机号登录"}
-          </View>
-          <View className="w-[1px] h-[70%] mx-5 translate-y-[5px] bg-primary" />
-          <View
-            onClick={() => {
-              switchLoginWay(enumLoginWay.email);
-            }}
-            className="text-[32px] text-primary"
-          >
-            {loginWay === enumLoginWay.email ? "二维码登录" : "邮箱登录"}
-          </View>
+      <View className="flex mt-auto grow-0 shrink-0 justify-center items-center h-[50px] text-primary">
+        <View
+          onClick={() => {
+            switchLoginWay(enumLoginWay.phone);
+          }}
+          className="text-[32px] text-primary"
+        >
+          {loginWay === enumLoginWay.phone ? "二维码登录" : "手机号登录"}
+        </View>
+        <View className="w-[1px] h-[70%] mx-5 translate-y-[5px] bg-primary" />
+        <View
+          onClick={() => {
+            switchLoginWay(enumLoginWay.email);
+          }}
+          className="text-[32px] text-primary"
+        >
+          {loginWay === enumLoginWay.email ? "二维码登录" : "邮箱登录"}
         </View>
       </View>
+
+      {showPlayer && <View className="h-[140px]" />}
+      <PlayerPanel />
     </View>
   );
 };

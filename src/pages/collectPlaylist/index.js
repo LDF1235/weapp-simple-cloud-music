@@ -7,11 +7,15 @@ import { useEffect } from "react";
 import { reqUserPlaylist } from "@/services";
 import { useUserInfoStore } from "@/store/userInfo";
 import { useRef } from "react";
+import PlayerPanel from "@/components/PlayerPanel";
+import { usePlayerStore } from "@/store/player";
+import clsx from "clsx";
 
 const Index = () => {
   const [list, setList] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const { userInfo } = useUserInfoStore();
+  const { showPlayer } = usePlayerStore;
 
   const isPrevRequestOkRef = useRef(false);
   const offsetRef = useRef(0);
@@ -58,27 +62,30 @@ const Index = () => {
       className=" h-full bg-bgPrimary"
       style={{ paddingBottom: safeAreaRect.bottom }}
     >
-      <ScrollView
-        enableFlex
-        scrollY
-        enhanced
-        onScrollToLower={handleScrollToLower}
-        className="h-full"
-      >
-        <View className="flex px-10 flex-wrap  justify-between">
-          {list.map((item) => (
-            <PlaylistCard
-              {...item}
-              key={item.id}
-              className="text-[24px] mb-0 mt-5"
-              width={300}
-              titleClassName="text-[24px] h-[64px] leading-[32px]"
-              copywriter={null}
-            />
-          ))}
-          {hasMore && <ScrollBottomLoading />}
-        </View>
-      </ScrollView>
+      <View className={clsx("h-full", showPlayer ? "pb-[130px]" : "")}>
+        <ScrollView
+          enableFlex
+          scrollY
+          enhanced
+          onScrollToLower={handleScrollToLower}
+          className="h-full"
+        >
+          <View className="flex px-10 flex-wrap  justify-between">
+            {list.map((item) => (
+              <PlaylistCard
+                {...item}
+                key={item.id}
+                className="text-[24px] mb-0 mt-5"
+                width={300}
+                titleClassName="text-[24px] h-[64px] leading-[32px]"
+                copywriter={null}
+              />
+            ))}
+            {hasMore && <ScrollBottomLoading />}
+          </View>
+        </ScrollView>
+      </View>
+      <PlayerPanel />
     </View>
   );
 };

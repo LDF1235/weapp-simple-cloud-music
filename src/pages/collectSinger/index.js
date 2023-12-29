@@ -4,10 +4,14 @@ import { reqUserSingers } from "@/services";
 import { useEffect, useRef, useState } from "react";
 import { ScrollView, View } from "@tarojs/components";
 import { safeAreaRect } from "@/module/safeAreaRect";
+import clsx from "clsx";
+import { usePlayerStore } from "@/store/player";
+import PlayerPanel from "@/components/PlayerPanel";
 
 const Index = () => {
   const [singerList, setSingerList] = useState([]);
   const [hasMore, setHasMore] = useState(false);
+  const { showPlayer } = usePlayerStore;
 
   const isPrevRequestOkRef = useRef(true);
   const offsetRef = useRef(0);
@@ -19,7 +23,7 @@ const Index = () => {
     });
 
     if (response.code === 200) {
-      offsetRef.current+=30;
+      offsetRef.current += 30;
       setHasMore(response.more);
       setSingerList((prev) =>
         prev.concat(
@@ -52,29 +56,32 @@ const Index = () => {
       className="h-full bg-bgPrimary"
       style={{ paddingBottom: safeAreaRect.bottom }}
     >
-      <ScrollView
-        enableFlex
-        scrollY
-        enhanced
-        onScrollToLower={listScrollToLower}
-        className="h-full"
-      >
-        <View className="px-10 flex justify-between flex-wrap box-border">
-          {singerList.map((singer) => (
-            <SingerCard key={singer.id} {...singer} className="pt-0 mt-5" />
-          ))}
-          {singerList.length % 3 === 1 ? (
-            <>
+      <View className={clsx("h-full", showPlayer ? "pb-[130px]" : "")}>
+        <ScrollView
+          enableFlex
+          scrollY
+          enhanced
+          onScrollToLower={listScrollToLower}
+          className="h-full"
+        >
+          <View className="px-10 flex justify-between flex-wrap box-border">
+            {singerList.map((singer) => (
+              <SingerCard key={singer.id} {...singer} className="pt-0 mt-5" />
+            ))}
+            {singerList.length % 3 === 1 ? (
+              <>
+                <View className="w-[200px] h-[200px]"></View>
+                <View className="w-[200px] h-[200px]"></View>
+              </>
+            ) : null}
+            {singerList.length % 3 === 2 ? (
               <View className="w-[200px] h-[200px]"></View>
-              <View className="w-[200px] h-[200px]"></View>
-            </>
-          ) : null}
-          {singerList.length % 3 === 2 ? (
-            <View className="w-[200px] h-[200px]"></View>
-          ) : null}
-          {hasMore && <ScrollBottomLoading />}
-        </View>
-      </ScrollView>
+            ) : null}
+            {hasMore && <ScrollBottomLoading />}
+          </View>
+        </ScrollView>
+      </View>
+      <PlayerPanel />
     </View>
   );
 };

@@ -9,11 +9,14 @@ import SingerCard from "@/components/SingerCard";
 import { ROUTE_COLLECT_PLAYLIST, ROUTE_COLLECT_SINGER } from "@/constants";
 import Taro from "@tarojs/taro";
 import { remoteStorageCookies, remoteStorageUserInfo } from "@/storage";
+import PlayerPanel from "@/components/PlayerPanel";
+import { usePlayerStore } from "@/store/player";
 
 const Me = () => {
   const { userInfo } = useUserInfoStore();
   const [collectList, setCollectList] = useState([]);
   const [singers, setSingers] = useState([]);
+  const { showPlayer } = usePlayerStore();
 
   useEffect(() => {
     if (userInfo) {
@@ -65,16 +68,16 @@ const Me = () => {
 
   return (
     <View className="h-full bg-bgPrimary">
-      {userInfo ? null : (
-        <NoticeLogin
-          topSubTitle="曲库与设置"
-          topTitle="我的"
-          notice="账号信息需要登录"
-        />
-      )}
+      <ScrollView className="h-full" scrollY>
+        {userInfo ? null : (
+          <NoticeLogin
+            topSubTitle="曲库与设置"
+            topTitle="我的"
+            notice="账号信息需要登录"
+          />
+        )}
 
-      {userInfo ? (
-        <ScrollView className="h-full" scrollY>
+        {userInfo ? (
           <View className="pb-10">
             <View className="p-10 flex justify-between items-center bg-[linear-gradient(#fff,#f4f4f4)]">
               <View>
@@ -164,8 +167,10 @@ const Me = () => {
               退出登录
             </Button>
           </View>
-        </ScrollView>
-      ) : null}
+        ) : null}
+        {showPlayer && <View className="h-[130px]" />}
+      </ScrollView>
+      <PlayerPanel />
     </View>
   );
 };

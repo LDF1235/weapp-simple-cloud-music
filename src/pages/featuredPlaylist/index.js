@@ -5,6 +5,9 @@ import { reqMorePlaylist } from "@/services";
 import { ScrollView, View } from "@tarojs/components";
 import PlaylistCard from "@/components/PlaylistCard";
 import { safeAreaRect } from "@/module/safeAreaRect";
+import PlayerPanel from "@/components/PlayerPanel";
+import { usePlayerStore } from "@/store/player";
+import clsx from "clsx";
 
 const MoreList = () => {
   const router = useRouter();
@@ -14,6 +17,7 @@ const MoreList = () => {
   const isPrevRequestOkRef = useRef(true);
   const offsetRef = useRef(0);
   const { cat } = router.params;
+  const { showPlayer } = usePlayerStore();
 
   const fetchPlaylist = async () => {
     const res = await reqMorePlaylist({
@@ -47,27 +51,30 @@ const MoreList = () => {
       className=" h-full bg-bgPrimary"
       style={{ paddingBottom: safeAreaRect.bottom }}
     >
-      <ScrollView
-        enableFlex
-        scrollY
-        enhanced
-        onScrollToLower={listScrollToLower}
-        className="h-full"
-      >
-        <View className="flex px-10 flex-wrap  justify-between">
-          {playlist.map((item) => (
-            <PlaylistCard
-              {...item}
-              key={item.id}
-              className="text-[24px] mb-0 mt-5"
-              width={300}
-              titleClassName="text-[24px] h-[64px] leading-[32px]"
-              copywriter={null}
-            />
-          ))}
-          {hasMore && <ScrollBottomLoading />}
-        </View>
-      </ScrollView>
+      <View className={clsx("h-full", showPlayer ? "pb-[130px]" : "")}>
+        <ScrollView
+          enableFlex
+          scrollY
+          enhanced
+          onScrollToLower={listScrollToLower}
+          className="h-full"
+        >
+          <View className="flex px-10 flex-wrap  justify-between">
+            {playlist.map((item) => (
+              <PlaylistCard
+                {...item}
+                key={item.id}
+                className="text-[24px] mb-0 mt-5"
+                width={300}
+                titleClassName="text-[24px] h-[64px] leading-[32px]"
+                copywriter={null}
+              />
+            ))}
+            {hasMore && <ScrollBottomLoading />}
+          </View>
+        </ScrollView>
+      </View>
+      <PlayerPanel />
     </View>
   );
 };

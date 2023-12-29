@@ -7,6 +7,8 @@ import { ScrollView, View } from "@tarojs/components";
 import Taro, { useRouter } from "@tarojs/taro";
 import clsx from "clsx";
 import { useCallback, useEffect, useRef, useState } from "react";
+import PlayerPanel from "@/components/PlayerPanel";
+import { usePlayerStore } from "@/store/player";
 
 const MoreSingerSong = () => {
   const {
@@ -17,6 +19,7 @@ const MoreSingerSong = () => {
   const [isHasMore, setIsHasMore] = useState(true);
   const requestCountRef = useRef(0);
   const isFirstRequest = useRef(true);
+  const { showPlayer } = usePlayerStore();
 
   const fetchSong = useCallback(async (params) => {
     if (isFirstRequest.current) {
@@ -114,6 +117,8 @@ const MoreSingerSong = () => {
           {isHasMore && <ScrollBottomLoading />}
         </ScrollView>
       </View>
+      {showPlayer && <View className="h-[130px] grow-0 shrink-0" />}
+      <PlayerPanel />
     </View>
   );
 };
