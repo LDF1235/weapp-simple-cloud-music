@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 
-import chatQuoteLine from "@/assets/svgs/chatQuoteLine.svg";
-import chatQuoteFill from "@/assets/svgs/chatQuoteFill.svg";
-import playListFill from "@/assets/svgs/playListFill.svg";
-import playListLine from "@/assets/svgs/playListLine.svg";
-import repeatOneFill from "@/assets/svgs/repeatOneFill.svg";
-import shuffleFill from "@/assets/svgs/shuffleFill.svg";
-import orderPlayLine from "@/assets/svgs/orderPlayLine.svg";
-import messageFill from "@/assets/svgs/messageFill.svg";
-import messageLine from "@/assets/svgs/messageLine.svg";
+import chatQuoteLineSvg from "@/assets/svgs/chat-quote-line.svg";
+import chatQuoteFillSvg from "@/assets/svgs/chat-quote-fill.svg";
+import playListFillSvg from "@/assets/svgs/play-list-fill.svg";
+import playListLineSvg from "@/assets/svgs/play-list-line.svg";
+import repeatOneFillSvg from "@/assets/svgs/repeat-one-fill.svg";
+import shuffleFillSvg from "@/assets/svgs/shuffle-fill.svg";
+import orderPlayLineSvg from "@/assets/svgs/order-play-line.svg";
+import messageFillSvg from "@/assets/svgs/message-fill.svg";
+import messageLineSvg from "@/assets/svgs/message-line.svg";
 import playFillWhiteSvg from "../assets/svgs/play-fill-white.svg";
 import skipForwardFillWhiteSvg from "../assets/svgs/skip-forward-fill-white.svg";
 import pauseLineWhiteSvg from "../assets/svgs/pause-line-white.svg";
@@ -42,7 +42,7 @@ const enumDisplayAreaType = {
   playlist: 2,
 };
 
-const playModeImgs = [repeatOneFill, orderPlayLine, shuffleFill];
+const playModeImgs = [repeatOneFillSvg, orderPlayLineSvg, shuffleFillSvg];
 const playModeTips = ["单曲循环", "顺序播放", "随机播放"];
 
 const VirtualListItem = (param) => {
@@ -344,8 +344,8 @@ const SongPlayer = (props) => {
                 className="w-10 h-10"
                 src={
                   displayAreaType === enumDisplayAreaType.lyric
-                    ? chatQuoteFill
-                    : chatQuoteLine
+                    ? chatQuoteFillSvg
+                    : chatQuoteLineSvg
                 }
               />
             </View>
@@ -365,8 +365,8 @@ const SongPlayer = (props) => {
                   isPersonalFm
                     ? dislikeLineSvg
                     : displayAreaType === enumDisplayAreaType.playlist
-                    ? playListFill
-                    : playListLine
+                    ? playListFillSvg
+                    : playListLineSvg
                 }
               />
             </View>
@@ -397,7 +397,7 @@ const SongPlayer = (props) => {
             >
               <Image
                 className="w-10 h-10"
-                src={showComments ? messageFill : messageLine}
+                src={showComments ? messageFillSvg : messageLineSvg}
               />
             </View>
           </View>
