@@ -1,7 +1,7 @@
 export default {
   pages: [
-    "pages/recommend/index",
     "pages/me/index",
+    "pages/recommend/index",
     "pages/found/index",
     "pages/search/index",
     "pages/moreSinger/index",

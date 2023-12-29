@@ -1,16 +1,18 @@
 import React from "react";
-import { View } from "@tarojs/components";
-
+import { Image, View } from "@tarojs/components";
 import LoadImg from "./LoadImg";
 import clsx from "clsx";
 import { usePlayerStore } from "@/store/player";
 import { playSong } from "@/module/backgroundAudio";
+import heartFillPrimarySvg from "../assets/svgs/heart-fill-primary.svg";
+import { useUserInfoStore } from "@/store/userInfo";
 
 const SongCard = (props) => {
   const { id, picUrl, name, epname, durationTime, singers, className } = props;
   const singersAndEpname = `${singers || "-"}-${epname}`;
 
   const { currentSong } = usePlayerStore();
+  const { likeListIds } = useUserInfoStore();
 
   const songCardOnClick = () => {
     if (currentSong.id === id) return;
@@ -23,10 +25,17 @@ const SongCard = (props) => {
     <View
       onClick={songCardOnClick}
       className={clsx(
-        "flex items-center w-full h-[120px] pl-10 border-b-[1px] border-solid border-[rgba(197,197,197,.3)] box-border",
+        "flex items-center w-full h-[120px] border-b-[1px] border-solid border-[rgba(197,197,197,.3)] box-border",
         className
       )}
     >
+      <Image
+        src={heartFillPrimarySvg}
+        className={clsx(
+          "w-10 h-10 px-2",
+          likeListIds.has(id) ? "" : "invisible"
+        )}
+      />
       <LoadImg
         src={picUrl}
         className="!w-[92px] !h-[92px] grow-0 shrink-0 rounded-lg mr-3"
