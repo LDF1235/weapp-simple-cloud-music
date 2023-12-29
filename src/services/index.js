@@ -292,9 +292,26 @@ export const reqPersonalFm = () => {
   });
 };
 
+// 收藏/取消收藏歌单
 export const reqTogglePlaylistSubscribe = (data) => {
   return request({
     url: `/playlist/subscribe?id=${data.id}&t=${data.t}`,
     method: "POST",
   });
 };
+
+// 喜欢/取消喜欢音乐
+export const reqToggleLikeSong = (data) => {
+  return request({
+    url: "/like",
+    data,
+  });
+};
+
+// 将私人fm歌曲放垃圾桶
+export const reqTrashSong = (data) =>{
+  return request({
+    url: "/fm_trash",
+    data,
+  });
+}

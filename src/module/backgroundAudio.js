@@ -1,5 +1,5 @@
 import { enumPlayMode } from "@/constants";
-import { reqLyric, reqSongDetail, reqSongUrl } from "@/services";
+import { reqLyric, reqPersonalFm, reqSongDetail, reqSongUrl } from "@/services";
 import { usePlayerStore } from "@/store/player";
 import { getSongDetail } from "@/utils/getSongDetail";
 import Taro from "@tarojs/taro";
@@ -41,16 +41,36 @@ export const resumeAudio = () => {
   audioInstance.play();
 };
 
-export const playSongById = (id) => {
-  reqSongDetail({ ids: id }).then((res) => {
-    if (res.code === 200) {
-      const songDetail = getSongDetail(res.songs[0]);
-      playSong(songDetail);
+const appendSongToPlaylist = (songDetail) => {
+  usePlayerStore.setState((state) => {
+    const { playlistSongs } = state;
+    let nextPlaylistSongs = playlistSongs;
+    const hasSong = nextPlaylistSongs.some((x) => x.id === songDetail.id);
+
+    if (!hasSong) {
+      nextPlaylistSongs = [...nextPlaylistSongs];
+      if (state.playMode === enumPlayMode.order) {
+        const currentSongIndex = nextPlaylistSongs.findIndex(
+          (x) => x.id === songDetail.id
+        );
+        nextPlaylistSongs.splice(currentSongIndex + 1, 0, songDetail);
+      } else if (
+        state.playMode === enumPlayMode.repeatOne ||
+        state.playMode === enumPlayMode.shuffle
+      ) {
+        nextPlaylistSongs.push(songDetail);
+      }
     }
+
+    return {
+      playlistSongs: nextPlaylistSongs,
+    };
   });
 };
 
-export const playSong = async (songDetail) => {
+export const playSong = async (songDetail, isPersonalFm = false) => {
+  if (!isPersonalFm) appendSongToPlaylist(songDetail);
+
   const [urlRes, lyricRes] = await Promise.all([
     reqSongUrl({ id: songDetail.id }),
     reqLyric({ id: songDetail.id }),
@@ -73,29 +93,9 @@ export const playSong = async (songDetail) => {
     const lyric = lyricRes.code === 200 ? lyricRes.lrc.lyric : "";
 
     usePlayerStore.setState((state) => {
-      const { playlistSongs } = state;
-      let nextPlaylistSongs = playlistSongs;
-      const hasSong = nextPlaylistSongs.some((x) => x.id === id);
-
-      if (!hasSong) {
-        nextPlaylistSongs = [...nextPlaylistSongs];
-        if (state.playMode === enumPlayMode.order) {
-          const currentSongIndex = nextPlaylistSongs.findIndex(
-            (x) => x.id === id
-          );
-          nextPlaylistSongs.splice(currentSongIndex + 1, 0, songDetail);
-        } else if (
-          state.playMode === enumPlayMode.repeatOne ||
-          state.playMode === enumPlayMode.shuffle
-        ) {
-          nextPlaylistSongs.push(songDetail);
-        }
-      }
-
       return {
         isPlaying: true,
         showPlayer: true,
-        playlistSongs: nextPlaylistSongs,
         currentSong: {
           ...state.currentSong,
           id,
@@ -112,8 +112,57 @@ export const playSong = async (songDetail) => {
   }
 };
 
+export const playNextPersonalFmSong = () => {
+  const { fmSongs } = usePlayerStore.getState();
+
+  if (fmSongs.length === 0) {
+    usePlayerStore.setState({ isPersonalFm: true });
+    reqPersonalFm().then((res) => {
+      if (res.code === 200) {
+        const nextFmSongs = res.data.map((x) => ({
+          id: x.id,
+          name: x.name,
+          durationTime: x.duration,
+          picUrl: x.album.picUrl,
+          singers: x.artists?.map((item) => item.name)?.join("/") || "/",
+          epname: x.album.name,
+        }));
+        playSong(nextFmSongs[0], true);
+        usePlayerStore.setState({
+          isPlaying: true,
+          isPersonalFm: true,
+          fmSongs: nextFmSongs.slice(1),
+          currentFmSong: {
+            name: nextFmSongs[0].name,
+            picUrl: nextFmSongs[0].picUrl,
+            singers: nextFmSongs[0].singers,
+          },
+        });
+      }
+    });
+  } else {
+    const nextFmSongs = fmSongs.slice(1);
+    playSong(fmSongs[0]);
+    usePlayerStore.setState({
+      isPersonalFm: true,
+      fmSongs: nextFmSongs,
+      currentFmSong: {
+        name: fmSongs[0].name,
+        picUrl: fmSongs[0].picUrl,
+        singers: fmSongs[0].singers,
+      },
+    });
+  }
+};
+
 export const switchSong = (action) => {
-  const { playMode, playlistSongs, currentSong } = usePlayerStore.getState();
+  const { playMode, playlistSongs, currentSong, isPersonalFm } =
+    usePlayerStore.getState();
+
+  if (isPersonalFm) {
+    playNextPersonalFmSong();
+    return;
+  }
 
   if (playMode === enumPlayMode.repeatOne) {
     audioInstance.title = currentSong.name;
@@ -137,13 +186,13 @@ export const switchSong = (action) => {
     targetSongIndex = currentSongIndex + (action === "next" ? 1 : -1);
     targetSongIndex = targetSongIndex >= songCount ? 0 : targetSongIndex;
     targetSongIndex = targetSongIndex < 0 ? songCount - 1 : targetSongIndex;
-    playSongById(playlistSongs[targetSongIndex].id);
+    playSong(playlistSongs[targetSongIndex]);
     return;
   }
 
   if (playMode === enumPlayMode.shuffle) {
     targetSongIndex = Math.floor(Math.random() * songCount);
-    playSongById(playlistSongs[targetSongIndex].id);
+    playSong(playlistSongs[targetSongIndex]);
     return;
   }
 };

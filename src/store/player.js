@@ -4,6 +4,13 @@ import { create } from "zustand";
 const usePlayerStore = create((set) => ({
   showPlayer: false,
   isPlaying: false,
+  isPersonalFm: false,
+  fmSongs: [],
+  currentFmSong: {
+    name: "",
+    picUrl: "",
+    singers: "",
+  },
   playlistSongs: [],
   playMode: getStoragePlayMode(),
   currentSong: {

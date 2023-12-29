@@ -10,7 +10,6 @@ import {
   reqSongDetail,
 } from "@/services";
 import { useUserInfoStore } from "@/store/userInfo";
-// import BottomPlayPanel from "@/components/BottomPlayPanel";
 import { ScrollView, View, Text, Image } from "@tarojs/components";
 import { useEffect } from "react";
 import PlaylistCard from "@/components/PlaylistCard";
@@ -23,9 +22,24 @@ import radioFillSvg from "../../assets/svgs/radio-fill.svg";
 import { ROUTE_DAILY_RECOMMEND } from "@/constants";
 import Taro from "@tarojs/taro";
 import SongCard from "@/components/SongCard";
+import { usePlayerStore } from "@/store/player";
+import { playNextPersonalFmSong, resumeAudio } from "@/module/backgroundAudio";
+import PlayerPanel from "@/components/PlayerPanel";
+import { pxTransform } from "@tarojs/taro";
+import clsx from "clsx";
+
+const personalFmAnimateBar = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 const Index = () => {
   const { userInfo, likeListIds } = useUserInfoStore();
+  const { isPersonalFm, isPlaying, setPlayerState, showPlayer, currentFmSong } =
+    usePlayerStore();
+
+  const [animateBarDuration] = useState(() =>
+    Array.from({ length: 10 }, () =>
+      parseFloat(Math.random() * 1 + 0.5).toFixed(3)
+    )
+  );
   const [playlist, setPlaylist] = useState([]);
   const [similarPlaylist, setSimilarPlaylist] = useState([]);
   const [songName, setSongName] = useState("");
@@ -33,7 +47,6 @@ const Index = () => {
   const [similarSingers, setSimilarSingers] = useState([]);
   const [similarSongs, setSimilarSongs] = useState([]);
   const [firstDailySong, setFirstDailySong] = useState(null);
-  const [fmFirstSong, setFmFirstSong] = useState(null);
 
   const fetchSimilarRecommend = useCallback(() => {
     if (!likeListIds.size) return;
@@ -100,12 +113,22 @@ const Index = () => {
   const fetchPersonalFm = () => {
     reqPersonalFm().then((res) => {
       if (res.code === 200) {
-        const song = res.data[0];
-        setFmFirstSong({
-          name: song.name,
-          singers: song.artists?.map((item) => item.name)?.join("/") || "/",
-          picUrl: song.album.picUrl,
-        });
+        const fmSongs = res.data.map((x) => ({
+          id: x.id,
+          name: x.name,
+          durationTime: x.duration,
+          picUrl: x.album.picUrl,
+          singers: x.artists?.map((item) => item.name)?.join("/") || "/",
+          epname: x.album.name,
+        }));
+        setPlayerState(() => ({
+          fmSongs: fmSongs,
+          currentFmSong: {
+            name: fmSongs[0].name,
+            picUrl: fmSongs[0].picUrl,
+            singers: fmSongs[0].singers,
+          },
+        }));
       }
     });
   };
@@ -150,6 +173,17 @@ const Index = () => {
       .getDate()
       .toString()
       .padStart(2, "0")}日`;
+  };
+
+  const handlePlayFm = () => {
+    if (isPersonalFm) {
+      if (isPlaying) return;
+
+      resumeAudio();
+      setPlayerState(() => ({ isPlaying: true, isPersonalFm: true }));
+    } else {
+      playNextPersonalFmSong();
+    }
   };
 
   return (
@@ -211,23 +245,35 @@ const Index = () => {
           <View
             className="mt-10 mx-10 rounded-[20px] bg-center bg-cover bg-no-repeat overflow-hidden"
             style={{
-              backgroundImage: fmFirstSong
-                ? `url(${fmFirstSong.picUrl})`
-                : undefined,
+              backgroundImage: `url(${currentFmSong.picUrl})`,
             }}
+            onClick={handlePlayFm}
           >
-            <View className="bg-[rgba(0,0,0,.4)] backdrop-filter-[30px] flex p-5">
+            <View className="bg-[rgba(0,0,0,.4)] backdrop-filter-[30px] flex p-5 relative">
+              {personalFmAnimateBar.map((x) => (
+                <View
+                  className={clsx(
+                    "absolute bg-[rgba(255,255,255,.4)] h-full w-8 rounded-tl-[20px] rounded-tr-[20px] animate-[personal-fm_ease-in-out_infinite_alternate]",
+                    isPersonalFm && isPlaying ? "" : "hidden"
+                  )}
+                  style={{
+                    right: pxTransform(x * 50 + 20),
+                    animationDuration: `${animateBarDuration[x]}s`,
+                  }}
+                />
+              ))}
+
               <Image
-                className="w-[140px] h-[140px]"
-                src={fmFirstSong ? fmFirstSong.picUrl : ""}
+                className="w-[140px] h-[140px] rounded-[20px]"
+                src={currentFmSong.picUrl}
               />
 
               <View className="flex-1 overflow-hidden ml-5">
                 <View className="w-full text-ellipsis overflow-hidden whitespace-nowrap text-[36px] text-white font-bold">
-                  {fmFirstSong?.name}
+                  {currentFmSong.name}
                 </View>
                 <View className="w-full mt-5 text-[28px] text-[rgba(255,255,255,.7)] text-ellipsis overflow-hidden whitespace-nowrap">
-                  {fmFirstSong?.singers} - {fmFirstSong?.name}
+                  {currentFmSong.singers} - {currentFmSong.name}
                 </View>
 
                 <View className="flex mt-5 justify-end items-center text-[24px]">
@@ -342,9 +388,10 @@ const Index = () => {
               ) : null}
             </View>
           </View>
+          {showPlayer && <View className="h-[130px] grow-0 shrink-0" />}
         </ScrollView>
       ) : null}
-      {/* <BottomPlayPanel /> */}
+      <PlayerPanel />
     </View>
   );
 };

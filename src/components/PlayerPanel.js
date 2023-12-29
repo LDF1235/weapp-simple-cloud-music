@@ -4,23 +4,24 @@ import SongPanel from "@/components/SongPanel";
 import Taro from "@tarojs/taro";
 import { pauseAudio, resumeAudio, switchSong } from "@/module/backgroundAudio";
 import clsx from "clsx";
-import { isTabBarPath } from "@/utils/isTabBarPath";
+import { checkIsTabBarRoute } from "@/utils/checkIsTabBarRoute";
 import { usePlayerStore } from "@/store/player";
 import { safeAreaRect } from "@/module/safeAreaRect";
 import palyFillBlackSvg from "../assets/svgs/play-fill-black.svg";
 import skipForwardFillBlackSvg from "../assets/svgs/skip-forward-fill-black.svg";
 import pauseLineBlackSvg from "../assets/svgs/pause-line-black.svg";
 
-const BottomPlayPanel = () => {
+const PlayerPanel = () => {
   const [showSongPanel, setShowSongPanel] = useState(false);
   const { isPlaying, showPlayer, currentSong } = usePlayerStore();
   const [showComments, setShowComments] = useState(false);
+  const [isTabBarRoute] = useState(() => {
+    const pages = Taro.getCurrentPages();
+    return checkIsTabBarRoute(pages[pages.length - 1].route);
+  });
 
   const playControlOnClick = () => {
-    const pages = Taro.getCurrentPages();
-    const { route } = pages[pages.length - 1];
-
-    if (isTabBarPath(route)) {
+    if (isTabBarRoute) {
       Taro.hideTabBar();
     }
 
@@ -48,7 +49,7 @@ const BottomPlayPanel = () => {
     const pages = Taro.getCurrentPages();
     const currentPage = pages[pages.length - 1];
 
-    if (isTabBarPath(currentPage.route)) {
+    if (isTabBarRoute) {
       Taro.showTabBar();
     }
 
@@ -65,7 +66,7 @@ const BottomPlayPanel = () => {
         className="w-full flex fixed  px-2.5 h-[130px] items-center bg-[rgba(255,255,255,.7)] backdrop-blur-[20px] leading-none transition-all duration-[800ms]"
         onClick={playControlOnClick}
         style={{
-          bottom: safeAreaRect.bottom,
+          bottom: isTabBarRoute ? 0 : safeAreaRect.bottom,
         }}
       >
         <Image
@@ -125,4 +126,4 @@ const BottomPlayPanel = () => {
   );
 };
 
-export default BottomPlayPanel;
+export default PlayerPanel;

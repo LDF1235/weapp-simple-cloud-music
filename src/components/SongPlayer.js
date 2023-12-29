@@ -12,6 +12,9 @@ import messageLine from "@/assets/svgs/messageLine.svg";
 import playFillWhiteSvg from "../assets/svgs/play-fill-white.svg";
 import skipForwardFillWhiteSvg from "../assets/svgs/skip-forward-fill-white.svg";
 import pauseLineWhiteSvg from "../assets/svgs/pause-line-white.svg";
+import heartLineSvg from "../assets/svgs/heart-line.svg";
+import dislikeLineSvg from "../assets/svgs/dislike-line.svg";
+import heartFillPrimarySvg from "../assets/svgs/heart-fill-primary.svg";
 
 import Taro from "@tarojs/taro";
 import { format } from "date-fns";
@@ -20,7 +23,7 @@ import { setStoragePlayMode } from "@/storage";
 import LoadImg from "./LoadImg";
 import SongCard from "./SongCard";
 import LyricSection from "./LyricSection";
-import { Image, View, Text } from "@tarojs/components";
+import { Image, View } from "@tarojs/components";
 import clsx from "clsx";
 import { safeAreaRect } from "@/module/safeAreaRect";
 import {
@@ -30,6 +33,8 @@ import {
   switchSong,
 } from "@/module/backgroundAudio";
 import { usePlayerStore } from "@/store/player";
+import { refreshLikeListIds, useUserInfoStore } from "@/store/userInfo";
+import { reqToggleLikeSong, reqTrashSong } from "@/services";
 
 const enumDisplayAreaType = {
   coverImg: 0,
@@ -57,7 +62,9 @@ const VirtualListItem = (param) => {
 
 const SongPlayer = (props) => {
   const { songPanelOnClose, setShowComments, showComments } = props;
-  const { currentSong, isPlaying, playlistSongs, playMode } = usePlayerStore();
+  const { currentSong, isPlaying, playlistSongs, playMode, isPersonalFm } =
+    usePlayerStore();
+  const { likeListIds } = useUserInfoStore();
   const [displayAreaType, setDisplayAreaType] = useState(
     enumDisplayAreaType.coverImg
   );
@@ -226,6 +233,20 @@ const SongPlayer = (props) => {
     }
   };
 
+  const toggleLike = () => {
+    const isLikeCurrentSong = likeListIds.has(currentSong.id);
+    reqToggleLikeSong({ id: currentSong.id, like: !isLikeCurrentSong }).then(
+      (res) => {
+        if (res.code === 200) refreshLikeListIds();
+      }
+    );
+  };
+
+  const handleTrashSong = () => {
+    reqTrashSong({id:currentSong.id});
+    switchSong('next');
+  };
+
   return (
     <View
       style={{
@@ -330,12 +351,20 @@ const SongPlayer = (props) => {
             </View>
             <View
               className="flex-1 flex justify-center items-center"
-              onClick={toggleShowSongList}
+              onClick={() => {
+                if (isPersonalFm) {
+                  handleTrashSong();
+                } else {
+                  toggleShowSongList();
+                }
+              }}
             >
               <Image
                 className="w-10 h-10"
                 src={
-                  displayAreaType === enumDisplayAreaType.playlist
+                  isPersonalFm
+                    ? dislikeLineSvg
+                    : displayAreaType === enumDisplayAreaType.playlist
                     ? playListFill
                     : playListLine
                 }
@@ -343,9 +372,24 @@ const SongPlayer = (props) => {
             </View>
             <View
               className="flex-1 flex justify-center items-center"
-              onClick={togglePlayMode}
+              onClick={() => {
+                if (isPersonalFm) {
+                  toggleLike();
+                } else {
+                  togglePlayMode();
+                }
+              }}
             >
-              <Image className="w-10 h-10" src={playModeImgs[playMode]} />
+              <Image
+                className="w-10 h-10"
+                src={
+                  isPersonalFm
+                    ? likeListIds.has(currentSong.id)
+                      ? heartFillPrimarySvg
+                      : heartLineSvg
+                    : playModeImgs[playMode]
+                }
+              />
             </View>
             <View
               className="flex-1 flex justify-center items-center"
@@ -362,12 +406,16 @@ const SongPlayer = (props) => {
             <View
               className="flex-1 flex justify-center items-center text-center h-[160px]"
               onClick={() => {
+                if (isPersonalFm) return;
                 switchSong("prev");
               }}
             >
               <Image
                 src={skipForwardFillWhiteSvg}
-                className="w-[80px] h-[80px]"
+                className={clsx(
+                  "w-[80px] h-[80px] rotate-180",
+                  isPersonalFm ? "opacity-50" : ""
+                )}
               />
             </View>
             <View
