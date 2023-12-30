@@ -5,6 +5,7 @@ const usePlayerStore = create((set) => ({
   showPlayer: false,
   isPlaying: false,
   isPersonalFm: false,
+  isHeartbeatMode: false,
   fmSongs: [],
   currentFmSong: {
     name: "",

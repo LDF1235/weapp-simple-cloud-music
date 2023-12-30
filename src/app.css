@@ -34,6 +34,17 @@
   }
 }
 
+/* 我喜欢的音乐动画 */
+@keyframes my-like-list {
+  0% {
+    transform: translateX(-50%);
+  }
+
+  100% {
+    transform: translateX(50%);
+  }
+}
+
 page {
   box-sizing: border-box;
   font-family: -apple-system, BlinkMacSystemFont, PingFang SC, Hiragino Sans GB,

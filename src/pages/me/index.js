@@ -1,6 +1,11 @@
 import NoticeLogin from "@/components/NoticeLogin";
 import PlaylistTitle from "@/components/PlaylistTitle";
-import { reqLogout, reqUserPlaylist, reqUserSingers } from "@/services";
+import {
+  reqLogout,
+  reqSongDetail,
+  reqUserPlaylist,
+  reqUserSingers,
+} from "@/services";
 import { useUserInfoStore } from "@/store/userInfo";
 import { View, Text, Image, ScrollView, Button } from "@tarojs/components";
 import { useEffect, useState } from "react";
@@ -11,12 +16,90 @@ import Taro from "@tarojs/taro";
 import { remoteStorageCookies, remoteStorageUserInfo } from "@/storage";
 import PlayerPanel from "@/components/PlayerPanel";
 import { usePlayerStore } from "@/store/player";
+import playFillSvg from "../../assets/svgs/play-fill.svg";
+import heartPulseFillSvg from "../../assets/svgs/heart-pulse-fill.svg";
+import { pxTransform } from "@tarojs/taro";
+
+const randomSizes = [
+  {
+    imgSize: 40,
+    textFontSize: 30,
+    animationDuration: 20,
+  },
+  {
+    imgSize: 26,
+    textFontSize: 20,
+    animationDuration: 22,
+  },
+  {
+    imgSize: 44,
+    textFontSize: 33,
+    animationDuration: 24,
+  },
+  {
+    imgSize: 44,
+    textFontSize: 36,
+    animationDuration: 26,
+  },
+  {
+    imgSize: 48,
+    textFontSize: 39,
+    animationDuration: 28,
+  },
+  {
+    imgSize: 52,
+    textFontSize: 42,
+    animationDuration: 30,
+  },
+  {
+    imgSize: 56,
+    textFontSize: 45,
+    animationDuration: 32,
+  },
+  {
+    imgSize: 60,
+    textFontSize: 48,
+    animationDuration: 34,
+  },
+];
 
 const Me = () => {
-  const { userInfo } = useUserInfoStore();
+  const { userInfo, likeListIds } = useUserInfoStore();
   const [collectList, setCollectList] = useState([]);
   const [singers, setSingers] = useState([]);
   const { showPlayer } = usePlayerStore();
+  const [randomLikedSongs, setRandomLikedSongs] = useState([]);
+  const [randomSongSizes, setRandomSongSizes] = useState([]);
+
+  useEffect(() => {
+    if (!likeListIds.size) return;
+
+    const list = Array.from(likeListIds);
+    const ids = list.length < 10 ? list : [];
+
+    if (ids.length === 0) {
+      for (let i = 0; i < 10; i++) {
+        ids.push(list[Math.floor(Math.random() * list.length)]);
+      }
+    }
+
+    reqSongDetail({ ids: ids.join(",") }).then((res) => {
+      if (res.code === 200) {
+        setRandomLikedSongs(
+          res.songs.map((x) => ({
+            id: x.id,
+            name: x.name,
+            picUrl: x.al.picUrl,
+          }))
+        );
+        setRandomSongSizes(
+          res.songs.map(
+            () => randomSizes[Math.floor(Math.random() * randomSizes.length)]
+          )
+        );
+      }
+    });
+  }, [likeListIds]);
 
   useEffect(() => {
     if (userInfo) {
@@ -96,12 +179,67 @@ const Me = () => {
                 {userInfo.profile.nickname}
               </View>
             </View>
+
             <View
-              className="mt-10 mx-10 aspect-square bg-center bg-no-repeat bg-cover rounded-[20px] overflow-hidden"
+              className="mt-10 mx-10 text-white aspect-square bg-center bg-no-repeat bg-cover rounded-[20px] overflow-hidden"
               style={{ backgroundImage: `url(${userInfo.profile.avatarUrl})` }}
             >
-              <View className="h-full backdrop-blur-[40px] bg-[rgba(0,0,0,.1)]"></View>
+              <View className="h-full relative backdrop-blur-[40px] bg-[rgba(0,0,0,.1)] overflow-hidden">
+                <View className="text-center my-10">
+                  <Text className="text-[72px] font-bold">我喜欢的音乐</Text>
+                  <Text className="text-[32px] ml-3">{likeListIds.size}首</Text>
+                </View>
+
+                {randomLikedSongs.map((x, i) => (
+                  <View
+                    style={{
+                      animationDuration: randomSongSizes.length
+                        ? `${randomSongSizes[i].animationDuration}s`
+                        : undefined,
+                    }}
+                    key={x.id}
+                    className="flex items-center animate-[my-like-list_ease-in-out_infinite_alternate]"
+                  >
+                    <Image
+                      src={x.picUrl}
+                      style={{
+                        width: pxTransform(
+                          randomSongSizes.length
+                            ? randomSongSizes[i].imgSize
+                            : 0
+                        ),
+                        height: pxTransform(
+                          randomSongSizes.length
+                            ? randomSongSizes[i].imgSize
+                            : 0
+                        ),
+                      }}
+                    />
+                    <Text
+                      style={{
+                        fontSize: pxTransform(
+                          randomSongSizes.length
+                            ? randomSongSizes[i].textFontSize
+                            : 0
+                        ),
+                      }}
+                      className="ml-4"
+                    >
+                      {x.name}
+                    </Text>
+                  </View>
+                ))}
+
+                <View className="w-[100px] h-[100px] flex justify-center items-center absolute bottom-5 left-5  bg-[rgba(255,255,255,.6)] rounded-[50%]">
+                  <Image src={playFillSvg} className=" w-12 h-12" />
+                </View>
+
+                <View className="w-[100px] h-[100px] flex justify-center items-center absolute bottom-5 right-5  bg-[rgba(255,255,255,.6)] rounded-[50%]">
+                  <Image src={heartPulseFillSvg} className="w-12 h-12" />
+                </View>
+              </View>
             </View>
+
             <PlaylistTitle
               className="mt-10 mx-10"
               showMoreBtn
