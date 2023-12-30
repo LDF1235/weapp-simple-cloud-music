@@ -55,16 +55,18 @@ const Index = () => {
       Math.floor(Math.random() * likeListIds.size)
     ];
     reqRecommendSimilarSong({ id: songId }).then((res) => {
-      setSimilarSongs(
-        res.songs.map((x) => ({
-          id: x.id,
-          name: x.name,
-          durationTime: x.duration,
-          picUrl: x.album.picUrl,
-          singers: x.artists.map((item) => item.name)?.join("/") || "/",
-          epname: x.album.epname,
-        }))
-      );
+      if (res.code === 200) {
+        setSimilarSongs(
+          res.songs.map((x) => ({
+            id: x.id,
+            name: x.name,
+            durationTime: x.duration,
+            picUrl: x.album.picUrl,
+            singers: x.artists.map((item) => item.name)?.join("/") || "/",
+            epname: x.album.epname,
+          }))
+        );
+      }
     });
     reqSongDetail({ ids: songId }).then((res) => {
       if (res.code === 200) {

@@ -15,6 +15,7 @@ export default {
     "pages/officialPlaylist/index",
     "pages/highQualityPlaylist/index",
     "pages/dailyRecommend/index",
+    "pages/likePlaylist/index",
   ],
   requiredBackgroundModes: ["audio"],
   window: {

@@ -11,7 +11,11 @@ import { View, Text, Image, ScrollView, Button } from "@tarojs/components";
 import { useEffect, useState } from "react";
 import PlaylistCard from "@/components/PlaylistCard";
 import SingerCard from "@/components/SingerCard";
-import { ROUTE_COLLECT_PLAYLIST, ROUTE_COLLECT_SINGER } from "@/constants";
+import {
+  ROUTE_COLLECT_PLAYLIST,
+  ROUTE_COLLECT_SINGER,
+  ROUTE_LIKE_PLAYLIST,
+} from "@/constants";
 import Taro from "@tarojs/taro";
 import { removeStorageCookies, removeStorageUserInfo } from "@/storage";
 import PlayerPanel from "@/components/PlayerPanel";
@@ -20,11 +24,11 @@ import playFillSvg from "../../assets/svgs/play-fill.svg";
 import heartPulseFillSvg from "../../assets/svgs/heart-pulse-fill.svg";
 import { pxTransform } from "@tarojs/taro";
 import {
-  playSong,
   playWholePlaylist,
   startHeartbeatMode,
 } from "@/module/backgroundAudio";
 import { getSongDetail } from "@/utils/getSongDetail";
+import { useRef } from "react";
 
 const randomSizes = [
   {
@@ -132,27 +136,31 @@ const Me = () => {
       const id = userInfo.account.id;
 
       reqUserPlaylist({ uid: id, limit: 30, offset: 0 }).then((res) => {
-        findHeartbeatModePlaylist(res.playlist);
-        setCollectList(
-          res.playlist
-            .filter((x) => x.creator.userId !== id)
-            .map((x) => ({
-              id: x.id,
-              name: x.name,
-              playCount: x.playCount,
-              coverImgUrl: x.coverImgUrl,
-            }))
-        );
+        if (res.code === 200) {
+          findHeartbeatModePlaylist(res.playlist);
+          setCollectList(
+            res.playlist
+              .filter((x) => x.creator.userId !== id)
+              .map((x) => ({
+                id: x.id,
+                name: x.name,
+                playCount: x.playCount,
+                coverImgUrl: x.coverImgUrl,
+              }))
+          );
+        }
       });
 
       reqUserSingers({ limit: 25 }).then((res) => {
-        setSingers(
-          res.data.map((x) => ({
-            id: x.id,
-            img1v1Url: x.img1v1Url,
-            name: x.name,
-          }))
-        );
+        if (res.code === 200) {
+          setSingers(
+            res.data.map((x) => ({
+              id: x.id,
+              img1v1Url: x.img1v1Url,
+              name: x.name,
+            }))
+          );
+        }
       });
     }
   }, [userInfo]);
@@ -176,7 +184,8 @@ const Me = () => {
     });
   };
 
-  const handlePlayLikeList = () => {
+  const handlePlayLikeList = (e) => {
+    e.stopPropagation();
     setPlayerState(() => ({
       isPersonalFm: false,
       isHeartbeatMode: false,
@@ -221,6 +230,9 @@ const Me = () => {
             <View
               className="mt-10 mx-10 text-white aspect-square bg-center bg-no-repeat bg-cover rounded-[20px] overflow-hidden"
               style={{ backgroundImage: `url(${userInfo.profile.avatarUrl})` }}
+              onClick={() => {
+                Taro.navigateTo({ url: ROUTE_LIKE_PLAYLIST });
+              }}
             >
               <View className="h-full relative backdrop-blur-[40px] bg-[rgba(0,0,0,.1)] overflow-hidden">
                 <View className="text-center my-10">
@@ -276,7 +288,10 @@ const Me = () => {
                 </View>
 
                 <View
-                  onClick={startHeartbeatMode}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    startHeartbeatMode;
+                  }}
                   className="w-[100px] h-[100px] flex justify-center items-center absolute bottom-5 right-5  bg-[rgba(255,255,255,.6)] rounded-[50%]"
                 >
                   <Image src={heartPulseFillSvg} className="w-12 h-12" />
