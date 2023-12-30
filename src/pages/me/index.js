@@ -13,7 +13,7 @@ import PlaylistCard from "@/components/PlaylistCard";
 import SingerCard from "@/components/SingerCard";
 import { ROUTE_COLLECT_PLAYLIST, ROUTE_COLLECT_SINGER } from "@/constants";
 import Taro from "@tarojs/taro";
-import { remoteStorageCookies, remoteStorageUserInfo } from "@/storage";
+import { removeStorageCookies, removeStorageUserInfo } from "@/storage";
 import PlayerPanel from "@/components/PlayerPanel";
 import { usePlayerStore } from "@/store/player";
 import playFillSvg from "../../assets/svgs/play-fill.svg";
@@ -159,8 +159,8 @@ const Me = () => {
       success: function (res) {
         if (res.confirm) {
           reqLogout().then(() => {
-            remoteStorageCookies();
-            remoteStorageUserInfo();
+            removeStorageCookies();
+            removeStorageUserInfo();
             useUserInfoStore.setState({
               likeListIds: new Set(),
               userInfo: null,

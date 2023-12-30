@@ -16,10 +16,6 @@ const getStorage = (key, defaultVal) => {
   }
 };
 
-const remoteStorage = (key) => {
-  remoteStorage(key);
-};
-
 // 搜索关键字
 export const getStorageKeyword = () => getStorage(STORAGE_KEYWORD, []);
 export const setStorageKeyword = (keywords) => {
@@ -41,7 +37,7 @@ export const setStoragePlayMode = (mode) => {
 };
 export const getStoragePlayMode = () =>
   getStorage(STORAGE_PLAY_MODE, enumPlayMode.order);
-export const remoteStoragePlayMode = () => {
+export const removeStoragePlayMode = () => {
   removeStorage({ key: STORAGE_PLAY_MODE });
 };
 
@@ -53,7 +49,7 @@ export const setStorageUserInfo = (userInfo) => {
   });
 };
 export const getStorageUserInfo = () => getStorage(STORAGE_USER_INFO, null);
-export const remoteStorageUserInfo = () => {
+export const removeStorageUserInfo = () => {
   removeStorage({ key: STORAGE_USER_INFO });
 };
 
@@ -65,6 +61,6 @@ export const setStorageCookie = (data) => {
   });
 };
 export const getStorageCookies = () => getStorage(STORAGE_COOKIE, []);
-export const remoteStorageCookies = () => {
+export const removeStorageCookies = () => {
   removeStorage({ key: STORAGE_COOKIE });
 };
