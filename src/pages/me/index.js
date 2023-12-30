@@ -19,7 +19,12 @@ import { usePlayerStore } from "@/store/player";
 import playFillSvg from "../../assets/svgs/play-fill.svg";
 import heartPulseFillSvg from "../../assets/svgs/heart-pulse-fill.svg";
 import { pxTransform } from "@tarojs/taro";
-import { startHeartbeatMode } from "@/module/backgroundAudio";
+import {
+  playSong,
+  playWholePlaylist,
+  startHeartbeatMode,
+} from "@/module/backgroundAudio";
+import { getSongDetail } from "@/utils/getSongDetail";
 
 const randomSizes = [
   {
@@ -171,6 +176,17 @@ const Me = () => {
     });
   };
 
+  const handlePlayLikeList = () => {
+    setPlayerState(() => ({
+      isPersonalFm: false,
+      isHeartbeatMode: false,
+    }));
+    const likeList = Array.from(likeListIds);
+    reqSongDetail({ ids: likeList[0] }).then((res) => {
+      playWholePlaylist(likeList.slice(1), getSongDetail(res.songs[0]));
+    });
+  };
+
   return (
     <View className="h-full bg-bgPrimary">
       <ScrollView className="h-full" scrollY>
@@ -252,7 +268,10 @@ const Me = () => {
                   </View>
                 ))}
 
-                <View className="w-[100px] h-[100px] flex justify-center items-center absolute bottom-5 left-5  bg-[rgba(255,255,255,.6)] rounded-[50%]">
+                <View
+                  onClick={handlePlayLikeList}
+                  className="w-[100px] h-[100px] flex justify-center items-center absolute bottom-5 left-5  bg-[rgba(255,255,255,.6)] rounded-[50%]"
+                >
                   <Image src={playFillSvg} className=" w-12 h-12" />
                 </View>
 

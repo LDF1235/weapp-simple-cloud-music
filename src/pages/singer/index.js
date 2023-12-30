@@ -43,7 +43,7 @@ const SingerInfo = () => {
 
   const playAllSong = () => {
     playWholePlaylist(
-      songs.map((x) => x.id),
+      songs.map((x) => x.id).slice(1),
       getSongDetail(songs[0])
     );
   };

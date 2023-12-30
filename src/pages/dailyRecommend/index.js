@@ -38,7 +38,7 @@ const Index = () => {
       icon: "none",
     });
     playWholePlaylist(
-      songs.map((x) => x.id),
+      songs.map((x) => x.id).slice(1),
       songs[0]
     );
   };

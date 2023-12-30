@@ -152,7 +152,7 @@ const Playlist = () => {
       title: "已替换当前播放列表",
       icon: "none",
     });
-    playWholePlaylist(allTrackIdsRef.current, getSongDetail(songs[0]));
+    playWholePlaylist(allTrackIdsRef.current.slice(1), getSongDetail(songs[0]));
   };
 
   const handleToggleSubscribe = async () => {
