@@ -1,6 +1,13 @@
 import { enumPlayMode } from "@/constants";
-import { reqLyric, reqPersonalFm, reqSongDetail, reqSongUrl } from "@/services";
+import {
+  reqHeartbeatMode,
+  reqLyric,
+  reqPersonalFm,
+  reqSongDetail,
+  reqSongUrl,
+} from "@/services";
 import { usePlayerStore } from "@/store/player";
+import { useUserInfoStore } from "@/store/userInfo";
 import { getSongDetail } from "@/utils/getSongDetail";
 import Taro from "@tarojs/taro";
 
@@ -68,7 +75,9 @@ const appendSongToPlaylist = (songDetail) => {
   });
 };
 
-export const playSong = async (songDetail, isPersonalFm = false) => {
+export const playSong = async (songDetail) => {
+  const { isPersonalFm } = usePlayerStore.getState();
+
   if (!isPersonalFm) appendSongToPlaylist(songDetail);
 
   const [urlRes, lyricRes] = await Promise.all([
@@ -116,7 +125,7 @@ export const playNextPersonalFmSong = () => {
   const { fmSongs } = usePlayerStore.getState();
 
   if (fmSongs.length === 0) {
-    usePlayerStore.setState({ isPersonalFm: true });
+    usePlayerStore.setState({ isPersonalFm: true, isHeartbeatMode: false });
     reqPersonalFm().then((res) => {
       if (res.code === 200) {
         const nextFmSongs = res.data.map((x) => ({
@@ -127,7 +136,6 @@ export const playNextPersonalFmSong = () => {
           singers: x.artists?.map((item) => item.name)?.join("/") || "/",
           epname: x.album.name,
         }));
-        playSong(nextFmSongs[0], true);
         usePlayerStore.setState({
           isPlaying: true,
           isPersonalFm: true,
@@ -138,6 +146,7 @@ export const playNextPersonalFmSong = () => {
             singers: nextFmSongs[0].singers,
           },
         });
+        playSong(nextFmSongs[0]);
       }
     });
   } else {
@@ -145,6 +154,7 @@ export const playNextPersonalFmSong = () => {
     playSong(fmSongs[0]);
     usePlayerStore.setState({
       isPersonalFm: true,
+      isHeartbeatMode: false,
       fmSongs: nextFmSongs,
       currentFmSong: {
         name: fmSongs[0].name,
@@ -155,22 +165,56 @@ export const playNextPersonalFmSong = () => {
   }
 };
 
-export const switchSong = (action) => {
-  const { playMode, playlistSongs, currentSong, isPersonalFm } =
-    usePlayerStore.getState();
+export const startHeartbeatMode = () => {
+  const { heartbeatPlaylistId } = usePlayerStore.getState();
 
-  if (isPersonalFm) {
-    playNextPersonalFmSong();
+  if (!heartbeatPlaylistId) {
+    Taro.showToast({ icon: null, title: "暂无歌单，请先创建或收藏歌单" });
     return;
   }
 
-  if (playMode === enumPlayMode.repeatOne) {
-    audioInstance.title = currentSong.name;
-    audioInstance.epname = currentSong.epname;
-    audioInstance.singer = currentSong.singers;
-    audioInstance.coverImgUrl = currentSong.picUrl;
-    audioInstance.src = currentSong.url;
-    audioInstance.play();
+  Taro.showLoading();
+  reqHeartbeatMode({
+    id: useUserInfoStore.getState().userInfo.account.id,
+    pid: heartbeatPlaylistId,
+  }).then((res) => {
+    Taro.hideLoading();
+
+    if (res.code === 200) {
+      const songs = res.data
+        .filter((x) => x.songInfo)
+        .map((x) => {
+          const songInfo = x.songInfo;
+          return {
+            id: songInfo.id,
+            name: songInfo.name,
+            durationTime: songInfo.dt,
+            picUrl: songInfo.al.picUrl,
+            singers: songInfo.ar?.map((item) => item.name)?.join("/") || "/",
+            epname: songInfo.al.name,
+          };
+        });
+      usePlayerStore.setState(() => ({
+        isPersonalFm: false,
+        isHeartbeatMode: true,
+        playlistSongs: songs,
+      }));
+      playSong(songs[0]);
+    }
+  });
+};
+
+export const switchSong = (action) => {
+  const {
+    playMode,
+    playlistSongs,
+    currentSong,
+    isPersonalFm,
+    isHeartbeatMode,
+  } = usePlayerStore.getState();
+
+  if (isPersonalFm) {
+    playNextPersonalFmSong();
     return;
   }
 
@@ -182,11 +226,37 @@ export const switchSong = (action) => {
   );
   let targetSongIndex = 0;
 
+  if (isHeartbeatMode) {
+    targetSongIndex = currentSongIndex + (action === "next" ? 1 : -1);
+
+    if (targetSongIndex < 0) {
+      Taro.showToast({ icon: null, title: "已经是第一首了" });
+      return;
+    }
+
+    if (targetSongIndex >= songCount) {
+      startHeartbeatMode();
+      return;
+    }
+
+    return;
+  }
+
   if (playMode === enumPlayMode.order) {
     targetSongIndex = currentSongIndex + (action === "next" ? 1 : -1);
     targetSongIndex = targetSongIndex >= songCount ? 0 : targetSongIndex;
     targetSongIndex = targetSongIndex < 0 ? songCount - 1 : targetSongIndex;
     playSong(playlistSongs[targetSongIndex]);
+    return;
+  }
+
+  if (playMode === enumPlayMode.repeatOne) {
+    audioInstance.title = currentSong.name;
+    audioInstance.epname = currentSong.epname;
+    audioInstance.singer = currentSong.singers;
+    audioInstance.coverImgUrl = currentSong.picUrl;
+    audioInstance.src = currentSong.url;
+    audioInstance.play();
     return;
   }
 

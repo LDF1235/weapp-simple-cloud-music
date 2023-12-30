@@ -19,6 +19,7 @@ import { usePlayerStore } from "@/store/player";
 import playFillSvg from "../../assets/svgs/play-fill.svg";
 import heartPulseFillSvg from "../../assets/svgs/heart-pulse-fill.svg";
 import { pxTransform } from "@tarojs/taro";
+import { startHeartbeatMode } from "@/module/backgroundAudio";
 
 const randomSizes = [
   {
@@ -67,7 +68,7 @@ const Me = () => {
   const { userInfo, likeListIds } = useUserInfoStore();
   const [collectList, setCollectList] = useState([]);
   const [singers, setSingers] = useState([]);
-  const { showPlayer } = usePlayerStore();
+  const { showPlayer, setPlayerState } = usePlayerStore();
   const [randomLikedSongs, setRandomLikedSongs] = useState([]);
   const [randomSongSizes, setRandomSongSizes] = useState([]);
 
@@ -101,11 +102,32 @@ const Me = () => {
     });
   }, [likeListIds]);
 
+  const findHeartbeatModePlaylist = (playlist) => {
+    if (!playlist.length) return;
+
+    const userId = userInfo.account.id;
+
+    let id = playlist.find((x) => x.creator.userId === userId).id;
+
+    if (!id) {
+      playlist = playlist.filter((x) => x.creator.userId !== userId);
+
+      if (!playlist.length) return;
+
+      id = playlist[Math.floor(Math.random() * playlist.length)].id;
+    }
+
+    if (!id) return;
+
+    setPlayerState(() => ({ heartbeatPlaylistId: id }));
+  };
+
   useEffect(() => {
     if (userInfo) {
       const id = userInfo.account.id;
 
       reqUserPlaylist({ uid: id, limit: 30, offset: 0 }).then((res) => {
+        findHeartbeatModePlaylist(res.playlist);
         setCollectList(
           res.playlist
             .filter((x) => x.creator.userId !== id)
@@ -234,7 +256,10 @@ const Me = () => {
                   <Image src={playFillSvg} className=" w-12 h-12" />
                 </View>
 
-                <View className="w-[100px] h-[100px] flex justify-center items-center absolute bottom-5 right-5  bg-[rgba(255,255,255,.6)] rounded-[50%]">
+                <View
+                  onClick={startHeartbeatMode}
+                  className="w-[100px] h-[100px] flex justify-center items-center absolute bottom-5 right-5  bg-[rgba(255,255,255,.6)] rounded-[50%]"
+                >
                   <Image src={heartPulseFillSvg} className="w-12 h-12" />
                 </View>
               </View>

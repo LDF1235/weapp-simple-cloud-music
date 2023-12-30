@@ -180,7 +180,11 @@ const Index = () => {
       if (isPlaying) return;
 
       resumeAudio();
-      setPlayerState(() => ({ isPlaying: true, isPersonalFm: true }));
+      setPlayerState(() => ({
+        isPlaying: true,
+        isPersonalFm: true,
+        isHeartbeatMode: false,
+      }));
     } else {
       playNextPersonalFmSong();
     }

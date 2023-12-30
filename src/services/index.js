@@ -309,9 +309,17 @@ export const reqToggleLikeSong = (data) => {
 };
 
 // 将私人fm歌曲放垃圾桶
-export const reqTrashSong = (data) =>{
+export const reqTrashSong = (data) => {
   return request({
     url: "/fm_trash",
     data,
   });
-}
+};
+
+// 心动模式
+export const reqHeartbeatMode = (data) => {
+  return request({
+    url: "/playmode/intelligence/list",
+    data,
+  });
+};

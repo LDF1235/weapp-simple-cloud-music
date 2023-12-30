@@ -62,8 +62,14 @@ const VirtualListItem = (param) => {
 
 const SongPlayer = (props) => {
   const { songPanelOnClose, setShowComments, showComments } = props;
-  const { currentSong, isPlaying, playlistSongs, playMode, isPersonalFm } =
-    usePlayerStore();
+  const {
+    currentSong,
+    isPlaying,
+    playlistSongs,
+    playMode,
+    isPersonalFm,
+    isHeartbeatMode,
+  } = usePlayerStore();
   const { likeListIds } = useUserInfoStore();
   const [displayAreaType, setDisplayAreaType] = useState(
     enumDisplayAreaType.coverImg
@@ -243,8 +249,8 @@ const SongPlayer = (props) => {
   };
 
   const handleTrashSong = () => {
-    reqTrashSong({id:currentSong.id});
-    switchSong('next');
+    reqTrashSong({ id: currentSong.id });
+    switchSong("next");
   };
 
   return (
@@ -383,7 +389,7 @@ const SongPlayer = (props) => {
               <Image
                 className="w-10 h-10"
                 src={
-                  isPersonalFm
+                  isPersonalFm || isHeartbeatMode
                     ? likeListIds.has(currentSong.id)
                       ? heartFillPrimarySvg
                       : heartLineSvg
