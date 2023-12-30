@@ -13,11 +13,14 @@ import { reqSongDetail } from "@/services";
 import { useUserInfoStore } from "@/store/userInfo";
 import { useRef } from "react";
 import { enumPlayMode } from "@/constants";
+import shuffleFillSvg from "../../assets/svgs/shuffle-fill.svg";
+import { setStoragePlayMode } from "@/storage";
+import { playWholePlaylist } from "@/module/backgroundAudio";
 
 const Index = () => {
   const [songs, setSongs] = useState([]);
   const [hasMore, setHasMore] = useState(true);
-  const { showPlayer } = usePlayerStore();
+  const { showPlayer, setPlayerState } = usePlayerStore();
   const { likeListIds } = useUserInfoStore();
   const indexCursorRef = useRef(0);
   const likeListIdsRef = useRef(Array.from(likeListIds));
@@ -58,7 +61,15 @@ const Index = () => {
     });
   };
 
-  const handlePlayList = (mode) => {};
+  const handlePlayList = (mode) => {
+    setPlayerState(() => ({
+      isPersonalFm: false,
+      isHeartbeatMode: false,
+      playMode: mode,
+    }));
+    setStoragePlayMode(mode);
+    playWholePlaylist(likeListIdsRef.current.slice(1), songs[0]);
+  };
 
   return (
     <View
@@ -81,7 +92,7 @@ const Index = () => {
           }}
         >
           <Image src={playCircleLineSvg} className="w-8 h-8" />
-          <Text className="ml-2.5">播放歌单</Text>
+          <Text className="ml-2.5">顺序播放</Text>
         </Button>
 
         <Button
@@ -90,7 +101,7 @@ const Index = () => {
             handlePlayList(enumPlayMode.shuffle);
           }}
         >
-          <Image src={playCircleLineSvg} className="w-8 h-8" />
+          <Image src={shuffleFillSvg} className="w-8 h-8" />
           <Text className="ml-2.5">随机播放</Text>
         </Button>
       </View>
