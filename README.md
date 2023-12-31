@@ -8,9 +8,9 @@ taro + react hooks + zustand + tailwindcss
 
 ## 部分截图
 
-<img src="./doc/imgs/1.png" width="240" />
-<img src="./doc/imgs/2.png" width="240" />
-<img src="./doc/imgs/3.png" width="240" />
-<img src="./doc/imgs/4.png" width="240" />
-<img src="./doc/imgs/5.png" width="240" />
-<img src="./doc/imgs/6.png" width="240" />
+<img src="./doc/imgs/1.png" width="200" /> <img src="./doc/imgs/2.png" width="200" /> <img src="./doc/imgs/3.png" width="200" />
+
+<img src="./doc/imgs/4.png" width="200" /> <img src="./doc/imgs/5.png" width="200" /> <img src="./doc/imgs/6.png" width="200" />
+
+
+
