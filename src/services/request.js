@@ -34,7 +34,7 @@ const findCookie = () => {
 export const request = (config) => {
   const cookie = findCookie();
 
-  if (config) {
+  if (config && cookie) {
     config.data = {
       ...config.data,
       cookie,
@@ -44,7 +44,7 @@ export const request = (config) => {
   return new Promise((resolve) => {
     taroRequest({
       ...config,
-      url: `http://192.168.2.173:3000${config.url}`,
+      url: `http://localhost:3000${config.url}`,
       timeout: 60000,
       success: (res) => {
         resolve(res.data);
