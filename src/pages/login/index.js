@@ -1,4 +1,4 @@
-import { View, Image, Button, Input, Text } from "@tarojs/components";
+import { View, Image, Button, Input } from "@tarojs/components";
 import { useState, useRef } from "react";
 import Taro from "@tarojs/taro";
 import simpleCloudMusicLogo from "@/assets/images/simpleCloudMusicLogo.jpg";
@@ -307,7 +307,7 @@ const Login = () => {
                 value={isPhoneAuthCode ? phoneAuthCode : phonePassword}
                 placeholder={`请输入${isPhoneAuthCode ? "验证码" : "密码"}`}
                 className="flex-1 border-0 border-b-[1px] border-solid border-b-[rgb(214,214,214)]"
-                type={isPhoneAuthCode ? "text" : "safe-password"}
+                password={!isPhoneAuthCode}
                 onInput={(e) => {
                   const val = e.detail.value;
 
@@ -360,7 +360,7 @@ const Login = () => {
                 value={emailPassword}
                 placeholder="密码"
                 className="flex-1 border-0 border-b-[1px] border-solid border-b-[rgb(214,214,214)]"
-                type="safe-password"
+                password
                 onInput={(e) => {
                   setEmailPassword(e.detail.value);
                 }}
